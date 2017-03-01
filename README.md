@@ -80,3 +80,4 @@ All other test files are located near the component/service it tests, with the `
 
 The `DemoComponent` contains example for Angular 2 tests for Component, and in the server side there is an example for testing Meteor collections and stub data.
 # planmenu
+# planmenu
