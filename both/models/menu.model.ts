@@ -7,6 +7,6 @@ export interface Menu extends CollectionObject{
 }
 
 export interface Dieta{
-  fecha: Date;
-  platos: Plato[];
+  fecha: string;
+  plato: Plato;
 }
