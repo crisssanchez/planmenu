@@ -1,0 +1,73 @@
+@import "{}/node_modules/bootstrap/less/bootstrap.less";
+
+.dropdown.active ul.dropdown-menu {
+  display: block !important;
+}
+.rating > span:hover:before {
+   content: "\2605";
+   position: absolute;
+}
+
+hr{
+  height: 1px;
+}
+
+.container.barra{
+  margin-left: 0;
+}
+
+
+a.cabecera{
+  color: grey;
+}
+
+.momento-dia{
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+}
+
+.thumbnail{
+  border:none;
+  margin-bottom: auto;
+}
+
+.thumbnail.par{
+  background-color: @gray-lighter;
+}
+
+.thumbnail.impar{
+  background-color: @gray-lighter;
+}
+
+.thumbnail.hoy{
+  background-color: @brand-info;
+  color:white;
+}
+
+.img-responsive{
+  border-radius: 2px;
+  height: 100%;
+  width: 100%;
+}
+
+.plato{
+  margin-right: 2px;
+  margin-bottom: 10px;
+}
+
+.fa.fa-snowflake-o.activo,.fa.fa-snowflake-o:hover{
+  color: @brand-success;
+}
+
+.fa.fa-snowflake-o,.fa.fa-snowflake-o.activo:hover{
+  color: lighten(@brand-success,50%);
+}
+
+
+.fa.fa-exchange{
+  color: @brand-success;
+}
+
+.fa.fa-heart{
+  color: @brand-success;
+}

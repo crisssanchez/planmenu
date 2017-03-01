@@ -1,0 +1,27 @@
+
+<div class="container cabecera col-xs-7">
+    <div class="navegacion row">
+      <div class="col-xs-5">
+        <div class="titulo text-center">
+          <h4 style="color:grey;" id="titulo">Recetas de platos</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="container separador bg-success col-xs-7 col-lg-7" style="opacity:0.3;height:50%;"></div>
+
+<div class="container">
+
+  <div class="row" style="margin-right:2px;margin-left:2px;">
+
+        <div *ngFor="let plato of platos | async" class="row" style="margin-right:2px;margin-left:2px;">
+          <div class="plato">
+            <div class="thumbnail impar">
+              <img src="images/{{plato.nombre}}.jpg" class="img-circle">
+              <h6>{{plato.nombre}}</h6>
+            </div>
+          </div>
+        </div>
+
+  </div>
+</div>

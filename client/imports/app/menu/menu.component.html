@@ -1,0 +1,55 @@
+
+
+<div class="container cabecera col-xs-7">
+    <div class="navegacion row">
+      <div class="col-xs-5">
+        <div class="titulo text-center">
+          <h4 style="color:grey;" id="titulo">Menú Semanal</h4>
+        </div>
+      </div>
+      <div class="col-sm-2 col-xs-2 text-right ">
+        <ul class="nav nav-bar nav ">
+          <li>
+            <a hidden-xs title="Generar PDF" class="cabecera icon icon-three icon-1x hidden-xs icon-pdf" style="float: right;">
+              <i class="fa fa-print fa-2x"></i></a>
+          </li>
+          <li>
+            <a [routerLink]="['carro']" title="Carro" class="cabecera icon icon-three icon-1x" style="float: right;">
+              <i class="fa fa-shopping-cart fa-2x"></i></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+</div>
+
+<div class="container separador bg-success col-xs-7" style="opacity:0.3;height:50%;"></div>
+
+<div class="container">
+  <div class="row" style="margin-right:2px;margin-left:2px;">
+    <div *ngFor="let dia of dias; let i = index">
+      <div class="text-center col-md-1">
+        <h5>{{dia.name}} {{i+1}}</h5>
+        <div *ngFor="let plato of platos | async" class="row" style="margin-right:2px;margin-left:2px;">
+          <div class="plato">
+            <div class="thumbnail impar">
+              <div class="opciones">
+                <button (click)="removePlato(plato)">X</button>
+                <button (click)="insertPlato(plato)">+</button>
+                <button (click)="setCongelado(plato)" class="icon icon-1x" href="#" style="float: left;border:none;background:none;">
+                  <i *ngIf="isCongelado(plato)" title="Desmarca congelado" class="fa fa-snowflake-o fa-1x activo"></i>
+                  <i *ngIf="!isCongelado(plato)" title="Marcar congelado" class="fa fa-snowflake-o fa-1x"></i>
+                </button>
+                <button (click)="setPlato(plato)" title="Cambiar plato" alt="Cambiar plato" class="icon icon-1x hidden-xs icon-pdf" style="float: right;border:none;background:none;">
+                  <i class="fa fa-exchange fa-1x"></i></a>
+              </div>
+              <img src="images/{{plato.nombre}}.jpg" class="img-circle">
+              <h6>{{plato.nombre}}</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
