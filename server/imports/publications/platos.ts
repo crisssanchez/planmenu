@@ -5,3 +5,6 @@ import { Menus } from '../../../both/collections/menus.collection';
 import { Menu } from '../../../both/models/menu.model';
 
 Meteor.publish('platos', () => Platos.find());
+Meteor.publish('plato', function(idPlato:string){
+  return Platos.find({_id:idPlato})
+});

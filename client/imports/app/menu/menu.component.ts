@@ -3,19 +3,12 @@ import { Observable } from 'rxjs/Observable';
 import { MeteorObservable } from 'meteor-rxjs'
 import { Mongo } from 'meteor/mongo';
 import { Subscription } from 'rxjs/Subscription';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { Menu } from '../../../../both/models/menu.model';
-import { Dieta } from '../../../../both/models/menu.model';
 import { Menus } from '../../../../both/collections/menus.collection';
-import { Plato } from '../../../../both/models/plato.model';
-import { Platos } from '../../../../both/collections/platos.collection';
-import { SEMANA } from './data';
 
 import template from './menu.component.html';
-interface DiaSemana {
-  id: number;
-  name:string;
-}
 
 @Component({
   selector:'menu',
@@ -24,55 +17,39 @@ interface DiaSemana {
 
 export class MenuComponent implements OnInit, OnDestroy{
 
-  platos: Observable<Plato[]>;
-  platosSub: Subscription;
-  dias: DiaSemana[];
-  fechas: string[];
-  dieta: Dieta[];
-  menuSub: Subscription;
+  idMenu: string;
+
+  paramsSub: Subscription;
   menu: Menu;
+  menuSub: Subscription;
+
+  constructor(
+     private route: ActivatedRoute,
+     private router: Router
+    ) {}
 
   ngOnInit(){
-    this.platos = Platos.find({}).zone();
+    // Recogemos los parametros de la URL
+      this.paramsSub = this.route.params.subscribe(params => {
+        if(params['_id']!=null){
+            this.idMenu = params['_id'];
 
-    //this.platosSub = MeteorObservable.subscribe('platos_menu','dani').subscribe();
-    this.menuSub = MeteorObservable.subscribe('platos_menu', 'cris').subscribe(() => {
-        //this.menu = Menus.findOne({owner:'cris'});
-        //this.getFechas(this.menu);
+            if (this.menuSub) {
+              this.menuSub.unsubscribe();
+            }
+
+            this.menuSub = MeteorObservable.subscribe('menu', this.idMenu).subscribe(() => {
+              MeteorObservable.autorun().subscribe(() => {
+                this.menu = Menus.findOne(this.idMenu);
+              });
+            });
+        }
       });
 
-
-    this.dias = SEMANA;
-  }
-
-  getFechas(menu:Menu){
-
-      //this.fechas = menu.dieta.map(function(doc){return doc.fecha});
-
-  }
-
-  setCongelado(plato:Plato):void{
-    Platos.update({_id: plato._id}, {nombre: plato.nombre, congelado:!plato.congelado});
-  }
-
-  isCongelado(plato: Plato): boolean{
-    return plato.congelado;
-  }
-
-  setPlato(plato: Plato):void{
-    Platos.update({_id: plato._id}, {nombre: plato.nombre, congelado:plato.congelado});
-  }
-
-  removePlato(plato: Plato): void {
-    Platos.remove(plato._id);
-  }
-
-  insertPlato(plato: Plato):void{
-    Platos.insert({nombre: "Gazpacho", congelado: false});
   }
 
   ngOnDestroy(){
+    this.paramsSub.unsubscribe();
     this.menuSub.unsubscribe();
   }
-
 }

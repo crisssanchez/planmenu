@@ -7,6 +7,13 @@ export interface Menu extends CollectionObject{
 }
 
 export interface Dieta{
-  fecha: string;
-  plato: Plato;
+  fecha: Date;
+  almuerzo?: Plato[];
+  cena?: Plato[];
+  infoNutricional?: {
+    calorias?: number;
+    proteinas: number,
+    carbohidratos: number,
+    grasas: number
+  }
 }

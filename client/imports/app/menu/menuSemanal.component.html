@@ -1,0 +1,76 @@
+
+<div class="col-xs-1"></div>
+<div class="container cabecera col-md-6">
+    <div class="navegacion row">
+      <div class="col-md-5 titulo text-center">
+          <h4 style="color:grey;float:left;" id="titulo">Menú Semanal</h4>
+      </div>
+      <div class="col-md-1 col-xs-1 text-right ">
+        <ul class="nav nav-bar nav ">
+          <li>
+            <a hidden-xs title="Generar PDF" class="cabecera icon icon-three icon-1x hidden-xs icon-pdf" style="float: right;">
+              <i class="fa fa-print fa-2x"></i></a>
+          </li>
+          <li>
+            <a [routerLink]="['/carro']" title="Carro" class="cabecera icon icon-three icon-1x" style="float: right;">
+              <i class="fa fa-shopping-cart fa-2x"></i></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+</div>
+
+<div class="container separador bg-success col-xs-7" style="opacity:0.3;height:50%;"></div>
+
+<div class="container">
+
+  <div class="row">
+    <div *ngFor="let d of dieta">
+      <div class="text-center col-md-1">
+        <h5>{{setFormatoFecha(d.fecha)}}</h5>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="titulo-tabla col-md-7">
+      Almuerzo
+    </div>
+  </div>
+
+<div class="row">
+    <div *ngFor="let d of dieta; let dia = index">
+      <div class="col-md-1" >
+        <div *ngFor="let p of getPlatosAlmuerzo(dia)" class="row">
+          <div class="plato">
+            <div class="thumbnail impar">
+              <div class="opciones">
+              </div>
+              <img src="images/{{p.nombre}}.jpg" class="img-circle">
+              <h6>{{p.nombre}}</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="titulo-tabla col-md-7">
+      Cena
+    </div>
+  </div>
+<div class="row">
+  <div *ngFor="let d of dieta; let dia = index">
+    <div class="col-md-1">
+      <div *ngFor="let p of getPlatosCena(dia)" class="row">
+        <div class="plato" >
+          <div class="thumbnail impar">
+            <div class="opciones"></div>
+            <img src="images/{{p.nombre}}.jpg" class="img-circle">
+            <h6>{{p.nombre}}</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

@@ -1,7 +1,9 @@
 import { MenuComponent } from './menu.component';
-import { PlatosComponent } from './platos.component';
+import { MenusComponent } from './menus.component';
+import { MenuSemanalComponent } from './menuSemanal.component';
 
 export const MENU_DECLARATIONS = [
   MenuComponent,
-  PlatosComponent
+  MenusComponent,
+  MenuSemanalComponent
 ];

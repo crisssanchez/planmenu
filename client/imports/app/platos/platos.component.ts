@@ -6,13 +6,11 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Plato } from '../../../../both/models/plato.model';
 import { Platos } from '../../../../both/collections/platos.collection';
-import { SEMANA } from './data';
+import { Temporada } from '../data';
+import { Dificultad } from '../data';
+import { TipoPlato } from '../data';
 
 import template from './platos.component.html';
-interface DiaSemana {
-  id: number;
-  name:string;
-}
 
 @Component({
   selector:'platos',
@@ -23,24 +21,14 @@ export class PlatosComponent implements OnInit, OnDestroy{
 
   platos: Observable<Plato[]>;
   platosSub: Subscription;
-  dias: DiaSemana[];
 
   ngOnInit(){
     this.platos = Platos.find({}).zone();
     this.platosSub = MeteorObservable.subscribe('platos').subscribe();
-    this.dias = SEMANA;
-  }
-
-  setCongelado(plato:Plato):void{
-    Platos.update({_id: plato._id}, {nombre: plato.nombre, congelado:!plato.congelado});
-  }
-
-  isCongelado(plato: Plato): boolean{
-    return plato.congelado;
   }
 
   setPlato(plato: Plato):void{
-    Platos.update({_id: plato._id}, {nombre: plato.nombre, congelado:plato.congelado});
+    Platos.update({_id: plato._id}, {nombre: plato.nombre, dificultad:plato.dificultad, tiempo:plato.tipo, tipo:plato.tipo, nutrientes:plato.nutrientes, temporada:plato.temporada});
   }
 
   removePlato(plato: Plato): void {
@@ -48,7 +36,7 @@ export class PlatosComponent implements OnInit, OnDestroy{
   }
 
   insertPlato(plato: Plato):void{
-    Platos.insert({nombre: "Gazpacho", congelado: false});
+    Platos.insert({nombre: "Menestra", imagen: "Menestra.jpg", dificultad:Dificultad.MEDIA,tiempo:30,tipo:TipoPlato.ACOMPAÑAMIENTO,nutrientes:["VERDURA/HORTALIZA"], temporada:[Temporada.PRIMAVERA,Temporada.OTOÑO,Temporada.INIVERNO,Temporada.VERANO]});
   }
 
   ngOnDestroy(){
