@@ -1,26 +1,26 @@
 export const SEMANA = ['LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO','DOMINGO'];
 
-export const enum Temporada {
+export const enum TEMPORADA {
   VERANO,
   OTOÑO,
   INIVERNO,
   PRIMAVERA
 };
 
-export const enum Dificultad {
+export const enum DIFICULTAD {
   BAJA,
   MEDIA,
   ALTA
 };
 
-export const enum TipoPlato {
+export const enum TIPOPLATO {
   PRIMERO,
   SEGUNDO,
   ACOMPAÑAMIENTO,
   POSTRE
 };
 
-export const enum Medida {
+export const enum MEDIDA {
   KG,
   G,
   L,

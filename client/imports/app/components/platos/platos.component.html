@@ -1,0 +1,77 @@
+
+<div class="container cabecera col-xs-7">
+    <div class="page-header">
+      <div class="titulo col-xs-5">
+          <h4>Listado de platos</h4>
+      </div>
+
+      <div class="input-group br col-xs-2">
+          <input class="form-control search"
+           type="search" name="Buscar" placeholder="Buscar..."
+           (keyup)="buscarPlato(cadenaTexto.value)" #cadenaTexto>
+          <span class="input-group-btn">
+            <div class="btn-group dropup">
+              <button class="btn btn-success" type="button" (click)="buscarPlato(cadenaTexto.value)">
+                <span class="fa fa-search" style="color:white;"></span>
+              </button>
+              </span>
+              <span class="input-group-btn">
+                  <a [routerLink]="['/nuevoPlato']" class="btn btn-success">
+                    <span class="fa fa-plus" style="color:white;"></span>
+                  </a>
+              </span>
+            </div>
+
+      </div>
+
+    </div><!--/page-header-->
+</div><!--/container-->
+
+
+<!--<div class="col-xs-1"></div>
+<div class="container col-xs-6">
+
+  <div class="row">
+        <div *ngFor="let plato of platos | async">
+
+          <div class="plato col-xs-2">
+            <div class="thumbnail">
+              <img src="images/{{plato.nombre}}.jpg" class="img-circle">
+              <div class="col-xs-7">
+                  <a [routerLink]="['/recetaPlato', plato._id]" style="display:inline;" >{{plato.nombre}}</a>
+                  <button (click)="removePlato(plato)" hidden-xs title="Nuevo" class="cabecera icon icon-three icon-1x hidden-xs icon-new">
+                      <i class="fa fa-trash-o fa-1x"></i></button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+  </div>
+</div>-->
+
+<div class="container col-xs-7">
+      <div class="row">
+        <div class="col-xs-7 col-sm-2 col-md-1" *ngFor="let plato of platos | async" >
+          <div class="thumbnail">
+            <img src="images/{{plato.nombre}}.jpg">
+              <div class="caption">
+                <h4><a [routerLink]="['/recetaPlato', plato._id]" style="display:inline;" >{{plato.nombre}}</a></h4>
+                <span class="label label-primary">{{plato.tiempo}} min</span>
+                <span class="label label-success">{{plato.dificultad}}</span>
+                <span class="label label-warning">{{plato.tipo}}</span>
+
+                <span class="label label-danger" *ngFor="let nut of plato.nutrientes">{{nut}}</span>
+
+                <!--<span class="label label-default">{{plato.temporada}}</span>-->
+                <hr>
+                <a href="#" class="btn btn-default btn-xs pull-right" role="button">
+                  <i class="fa fa-edit"></i>
+                </a>
+
+                <a [routerLink]="['/recetaPlato', plato._id]" class="btn btn-info btn-xs" role="button">Receta</a>
+                <a href="#" class="btn btn-default btn-xs" role="button">Eliminar</a>
+            </div>
+          </div>
+        </div>
+  </div><!--/row-->
+</div><!--/container -->

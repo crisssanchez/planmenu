@@ -5,8 +5,8 @@ import { Mongo } from 'meteor/mongo';
 import { Subscription } from 'rxjs/Subscription';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { Menu } from '../../../../both/models/menu.model';
-import { Menus } from '../../../../both/collections/menus.collection';
+import { Menu } from '../../../../../both/models/menu.model';
+import { Menus } from '../../../../../both/collections/menus.collection';
 
 import template from './menu.component.html';
 

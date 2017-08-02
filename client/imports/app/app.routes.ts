@@ -1,15 +1,14 @@
-import { Route } from '@angular/router';
-import { Meteor } from 'meteor/meteor';
+import { Routes, RouterModule } from '@angular/router';
 
-import { MenuComponent } from './menu/menu.component';
-import { MenusComponent } from './menu/menus.component';
-import { MenuSemanalComponent } from './menu/menuSemanal.component'
-import { PlatosComponent } from './platos/platos.component';
-import { RecetaPlatoComponent } from './platos/recetaPlato.component';
-import { NuevoPlatoComponent } from './platos/nuevoPlato.component';
-import { CarroComponent } from './carro/carro.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { MenusComponent } from './components/menu/menus.component';
+import { MenuSemanalComponent } from './components/menu/menuSemanal.component'
+import { PlatosComponent } from './components/platos/platos.component';
+import { RecetaPlatoComponent } from './components/platos/recetaPlato.component';
+import { NuevoPlatoComponent } from './components/platos/nuevoPlato.component';
+import { CarroComponent } from './components/carro/carro.component';
 
-export const routes: Route[] = [
+const APP_ROUTES: Routes = [
   { path: '', component: MenuSemanalComponent },
   { path: 'menuSemanal', component: MenuSemanalComponent },
   { path: 'menu/:_id', component: MenuComponent },
@@ -21,3 +20,4 @@ export const routes: Route[] = [
   { path: 'nuevoPlato', component: NuevoPlatoComponent },
   { path: 'carro' , component: CarroComponent}
 ];
+export const APP_ROUTING = RouterModule.forRoot(APP_ROUTES);

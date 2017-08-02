@@ -5,8 +5,8 @@ import { Mongo } from 'meteor/mongo';
 import { Subscription } from 'rxjs/Subscription';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { Plato } from '../../../../both/models/plato.model';
-import { Platos } from '../../../../both/collections/platos.collection';
+import { Plato } from '../../../../../both/models/plato.model';
+import { Platos } from '../../../../../both/collections/platos.collection';
 
 import template from './recetaPlato.component.html';
 
@@ -26,13 +26,13 @@ export class RecetaPlatoComponent implements OnInit, OnDestroy{
   ingredientes:Object[];
 
   constructor(
-     private route: ActivatedRoute,
+     private activatedRoute: ActivatedRoute,
      private router: Router
     ) {}
 
   ngOnInit(){
     // Recogemos los parametros de la URL
-      this.paramsSub = this.route.params.subscribe(params => {
+      this.paramsSub = this.activatedRoute.params.subscribe(params => {
         if(params['_id']!=null){
             this.idPlato = params['_id'];
 

@@ -4,13 +4,13 @@ import { MeteorObservable } from 'meteor-rxjs'
 import { Mongo } from 'meteor/mongo';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Menu } from '../../../../both/models/menu.model';
-import { Dieta } from '../../../../both/models/menu.model';
-import { Menus } from '../../../../both/collections/menus.collection';
+import { Menu } from '../../../../../both/models/menu.model';
+import { Dieta } from '../../../../../both/models/menu.model';
+import { Menus } from '../../../../../both/collections/menus.collection';
 
-import { Plato } from '../../../../both/models/plato.model';
-import { Platos } from '../../../../both/collections/platos.collection';
-import { SEMANA } from '../data';
+import { Plato } from '../../../../../both/models/plato.model';
+import { Platos } from '../../../../../both/collections/platos.collection';
+import { SEMANA } from '../../data';
 
 import template from './menuSemanal.component.html';
 

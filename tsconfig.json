@@ -11,6 +11,11 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true
   },
+  "include": [
+    "client/**/*.ts",
+    "server/**/*.ts",
+    "imports/**/*.ts"
+  ],
   "exclude": [
     "node_modules"
   ],

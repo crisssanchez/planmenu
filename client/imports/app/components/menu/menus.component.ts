@@ -4,8 +4,8 @@ import { MeteorObservable } from 'meteor-rxjs'
 import { Mongo } from 'meteor/mongo';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Menu } from '../../../../both/models/menu.model';
-import { Menus } from '../../../../both/collections/menus.collection';
+import { Menu } from '../../../../../both/models/menu.model';
+import { Menus } from '../../../../../both/collections/menus.collection';
 
 import template from './menus.component.html';
 
