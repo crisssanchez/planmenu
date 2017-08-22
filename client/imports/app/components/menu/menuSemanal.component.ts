@@ -53,6 +53,12 @@ export class MenuSemanalComponent implements OnInit, OnDestroy{
     return `${this.dias[fecha.getUTCDay()]} ${fecha.getDate()}`;
   }
 
+  generarMenu(){
+
+    Meteor.call('generarMenuSemana');
+
+  }
+
 
   ngOnDestroy(){
     this.menuSub.unsubscribe();

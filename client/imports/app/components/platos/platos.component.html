@@ -58,7 +58,8 @@
                 <h4><a [routerLink]="['/recetaPlato', plato._id]" style="display:inline;" >{{plato.nombre}}</a></h4>
                 <span class="label label-primary">{{plato.tiempo}} min</span>
                 <span class="label label-success">{{plato.dificultad}}</span>
-                <span class="label label-warning">{{plato.tipo}}</span>
+                <span class="label label-warning">{{plato.tipos}}</span>
+                <span class="label label-info">{{plato.momentos}}</span>
 
                 <span class="label label-danger" *ngFor="let nut of plato.nutrientes">{{nut}}</span>
 

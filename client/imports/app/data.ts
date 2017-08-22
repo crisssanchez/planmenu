@@ -20,6 +20,11 @@ export const enum TIPOPLATO {
   POSTRE
 };
 
+export const enum MOMENTO{
+  ALMUERZO,
+  CENA
+};
+
 export const enum MEDIDA {
   KG,
   G,

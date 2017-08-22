@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap';
+import { LOCALE_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
@@ -31,7 +32,9 @@ import { SHARED_DECLARATIONS } from './shared'
     ...CARRO_DECLARATIONS,
     ...SHARED_DECLARATIONS
   ],
-  providers:[],
+  providers:[
+    {provide: LOCALE_ID , useValue:"es"}
+  ],
   bootstrap: [
     AppComponent
   ]

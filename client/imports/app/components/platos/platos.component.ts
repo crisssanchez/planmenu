@@ -10,6 +10,7 @@ import { Platos } from '../../../../../both/collections/platos.collection';
 import { TEMPORADA } from '../../data';
 import { DIFICULTAD } from '../../data';
 import { TIPOPLATO } from '../../data';
+import { MOMENTO } from '../../data';
 
 import template from './platos.component.html';
 
@@ -40,7 +41,7 @@ export class PlatosComponent implements OnInit, OnDestroy{
 
 
   setPlato(plato: Plato):void{
-    Platos.update({_id: plato._id}, {nombre: plato.nombre, dificultad:plato.dificultad, tiempo:plato.tipo, tipo:plato.tipo, nutrientes:plato.nutrientes, temporada:plato.temporada});
+    Platos.update({_id: plato._id}, {nombre: plato.nombre, dificultad:plato.dificultad, tiempo:plato.tiempo, tipos:plato.tipos, nutrientes:plato.nutrientes, momentos:plato.momentos});
   }
 
   removePlato(plato: Plato): void {
@@ -48,7 +49,7 @@ export class PlatosComponent implements OnInit, OnDestroy{
   }
 
   insertPlato(plato: Plato):void{
-    Platos.insert({nombre: "Menestra", imagen: "Menestra.jpg", dificultad:DIFICULTAD.MEDIA,tiempo:30,tipo:TIPOPLATO.ACOMPAÑAMIENTO,nutrientes:["VERDURA/HORTALIZA"], temporada:[TEMPORADA.PRIMAVERA,TEMPORADA.OTOÑO,TEMPORADA.INIVERNO,TEMPORADA.VERANO]});
+    Platos.insert({nombre: "Menestra", imagen: "Menestra.jpg", dificultad:DIFICULTAD.MEDIA,tiempo:30,tipos:[TIPOPLATO.ACOMPAÑAMIENTO],nutrientes:["VERDURA/HORTALIZA"], momentos:[MOMENTO.ALMUERZO]});
   }
 
   ngOnDestroy(){

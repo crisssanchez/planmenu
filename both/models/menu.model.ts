@@ -1,13 +1,14 @@
 import { Plato } from './plato.model';
 import { CollectionObject } from './collection-object.model';
 
-export interface Menu extends CollectionObject{
+export interface Menu {
+  _id?: string;
   owner: string;
   dieta: Dieta[];
 }
 
 export interface Dieta{
-  fecha: Date;
+  fecha: Date ;
   almuerzo?: Plato[];
   cena?: Plato[];
   infoNutricional?: {

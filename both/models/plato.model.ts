@@ -4,21 +4,24 @@ import { DIFICULTAD } from '../../client/imports/app/data';
 import { TIPOPLATO } from '../../client/imports/app/data';
 import { MEDIDA } from '../../client/imports/app/data';
 import { TEMPORADA } from '../../client/imports/app/data';
+import { MOMENTO } from '../../client/imports/app/data';
+
 
 export interface Plato extends CollectionObject{
   nombre: string;
   imagen?: string;
-  dificultad: DIFICULTAD;
-  tiempo: number;
-  tipo: TIPOPLATO;
+  descripcion?: string;
+  dificultad?: DIFICULTAD;
+  tiempo?: number;
+  tipos?: TIPOPLATO[];
+  momentos?: MOMENTO[];
   nutrientes: string[];
-  temporada: TEMPORADA[];
+  temporada?: TEMPORADA[];
   ingredientes?: [
     {
       ingrediente: Ingrediente,
       cantidad: number,
-      medida: MEDIDA,
-      principal: boolean
+      medida: MEDIDA
   }
 
   ];
@@ -27,6 +30,6 @@ export interface Plato extends CollectionObject{
     proteinas: number,
     carbohidratos: number,
     grasas: number
-  },
-  descripcion?: string;
+  }
+
 };
