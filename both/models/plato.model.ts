@@ -9,7 +9,6 @@ import { MOMENTO } from '../../client/imports/app/data';
 
 export interface Plato extends CollectionObject{
   nombre: string;
-  imagen?: string;
   descripcion?: string;
   dificultad?: DIFICULTAD;
   tiempo?: number;

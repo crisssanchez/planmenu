@@ -1,5 +1,6 @@
-export interface Nutriente{
-  id:string,
+import { CollectionObject } from './collection-object.model';
+
+export interface Nutriente extends CollectionObject{
   tipos:string[],
   minDia?:number,
   maxDia?:number,

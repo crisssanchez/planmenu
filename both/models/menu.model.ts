@@ -3,6 +3,7 @@ import { CollectionObject } from './collection-object.model';
 
 export interface Menu {
   _id?: string;
+  numero: number;
   owner: string;
   dieta: Dieta[];
 }

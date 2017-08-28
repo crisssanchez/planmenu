@@ -36,7 +36,12 @@ export class PlatosComponent implements OnInit, OnDestroy{
 
   buscarPlato( cadena:string ){
     console.log(cadena);
-    this.platos = Platos.find({"nombre": { $regex: cadena, $options: "i"}}).zone();
+    this.platos = Platos.find({ $or: [ {"nombre": { $regex: cadena, $options: "i"}},
+                                      {"dificultad": {$regex: cadena, $options: "i"}},
+                                      {"tiempo": Number(cadena)},
+                                      {"tipos":{$regex: cadena, $options: "i"}},
+                                      {"momentos":{$regex: cadena, $options: "i"}},
+                                      {"nutrientes":{$regex: cadena, $options: "i"}}]}).zone();
   }
 
 
@@ -49,7 +54,7 @@ export class PlatosComponent implements OnInit, OnDestroy{
   }
 
   insertPlato(plato: Plato):void{
-    Platos.insert({nombre: "Menestra", imagen: "Menestra.jpg", dificultad:DIFICULTAD.MEDIA,tiempo:30,tipos:[TIPOPLATO.ACOMPAÑAMIENTO],nutrientes:["VERDURA/HORTALIZA"], momentos:[MOMENTO.ALMUERZO]});
+    Platos.insert({nombre: "Menestra", dificultad:DIFICULTAD.MEDIA,tiempo:30,tipos:[TIPOPLATO.ACOMPAÑAMIENTO],nutrientes:["VERDURA/HORTALIZA"], momentos:[MOMENTO.ALMUERZO]});
   }
 
   ngOnDestroy(){

@@ -18,6 +18,8 @@ import template from './menu.component.html';
 export class MenuComponent implements OnInit, OnDestroy{
 
   idMenu: string;
+  generado:boolean = false;
+  prueba:string ="PRUEBA";
 
   paramsSub: Subscription;
   menu: Menu;
@@ -48,8 +50,56 @@ export class MenuComponent implements OnInit, OnDestroy{
 
   }
 
+  generarMenu(){
+    MeteorObservable.call('generarMenuSemana').subscribe(
+      (result: Menu) => {
+        this.generado = true;
+        this.menu = result;
+        console.log(result);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+
   ngOnDestroy(){
     this.paramsSub.unsubscribe();
     this.menuSub.unsubscribe();
+  }
+
+  bgColor(nutriente: string): string {
+    if (nutriente == 'VERDURA') {
+      return "green";
+    }
+    if (nutriente == 'LEGUMBRE'){
+      return "blue";
+    }
+    if(nutriente == 'PASTA'){
+      return "darksalmon";
+    }
+    if(nutriente == 'CARNE ROJA'){
+      return "red";
+    }
+    if(nutriente == 'CARNE BLANCA'){
+      return "brown";
+    }
+    if(nutriente == 'PESCADO BLANCO'){
+      return "pink";
+    }
+    if(nutriente == 'PESCADO AZUL'){
+      return "darkblue";
+    }
+    if(nutriente == 'HUEVO'){
+      return "orange";
+    }
+    if(nutriente == 'ARROZ'){
+      return "gray";
+    }
+    if(nutriente == 'PATATA'){
+      return "purple";
+    }
+    return "black";
   }
 }
