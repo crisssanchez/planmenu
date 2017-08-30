@@ -1,3 +1,4 @@
+import { factoryOrValue } from 'rxjs/operator/multicast';
 import { Meteor } from 'meteor/meteor';
 import { Menus } from '../../../both/collections/menus.collection';
 import { Menu } from '../../../both/models/menu.model';
@@ -10,30 +11,30 @@ import { Nutriente } from '../../../both/models/nutriente.model';
 
 Meteor.publish('menus', () => Menus.find());
 
-Meteor.publish('menu', function(idMenu:string){
-  return Menus.find({_id:idMenu});
+Meteor.publish('menu', function (idMenu: string) {
+  return Menus.find({ _id: idMenu });
 });
 
-Meteor.publish('menuSemanal', function(usuario:string){
-  var idMenuSemanal = Menus.find({owner:usuario}).fetch().reverse()[0]._id;
-  return Menus.find({_id:idMenuSemanal});
+Meteor.publish('menuSemanal', function (usuario: string) {
+  var idMenuSemanal = Menus.find({ owner: usuario }).fetch().reverse()[0]._id;
+  return Menus.find({ _id: idMenuSemanal });
 });
 
-Meteor.publish('dietaMenu',function(idMenu:string){
-  return Menus.findOne({_id:idMenu}).dieta;
+Meteor.publish('dietaMenu', function (idMenu: string) {
+  return Menus.findOne({ _id: idMenu }).dieta;
 });
 
 interface consumoNutrientes {
   nutriente: string,
   consumoDiario: number,
-  minDiario:number,
-  consumoSemanal:number,
-  maxSemanal:number
+  minDiario: number,
+  consumoSemanal: number,
+  maxSemanal: number
 }
 
 Meteor.methods({
 
-  generarMenuSemana(){
+  generarMenuSemana() {
 
     let menu: Menu = {
       dieta: [],
@@ -53,7 +54,7 @@ Meteor.methods({
     dias = semana.slice();
 
     //Recorro los días de la semana
-    while(dias.length != 0){
+    while (dias.length != 0) {
 
       let menuDia: Plato[] = [];
 
@@ -61,17 +62,17 @@ Meteor.methods({
       let totalPlatosDia = 4;
 
 
-      while( menuDia.length < totalPlatosDia){
+      while (menuDia.length < totalPlatosDia) {
 
-        let plato:Plato;
-        let nutriente:string = getAleatorio(getNutrientesValidos(consumo));
+        let plato: Plato;
+        let nutrientesValidos: string[];
 
         //Obtengo un nutriente aleatorio de entre los nutrientes validos (que no superan el consumo)
-        nutriente = getAleatorio(getNutrientesValidos(consumo));
+        nutrientesValidos = getNutrientesValidos(consumo, menuDia);
 
         //Obtengo un plato aleatorio de entre los platos válidos (que cumplan las condiciones)
-        plato = getAleatorio(getPlatosValidos(nutriente, consumo, menuDia, menu, menuAnterior));
-        consumirNutrientesPlato(plato,consumo);
+        plato = getAleatorio(getPlatosValidos(nutrientesValidos, consumo, menuDia, menu, menuAnterior));
+        consumirNutrientesPlato(plato, consumo);
 
         //Añado el plato al día
         menuDia.push({
@@ -79,17 +80,19 @@ Meteor.methods({
           nombre: plato.nombre,
           nutrientes: plato.nutrientes
         });
+
+        consumo = inicializarConsumo(nutrientes, consumo);
       }
 
       //Añado los platos al menú del día
-      menu.dieta.push( {
+      menu.dieta.push({
         fecha: dia,
-        almuerzo: [menuDia[0],menuDia[1]],
-        cena: [menuDia[2],menuDia[3]]
+        almuerzo: [menuDia[0], menuDia[1]],
+        cena: [menuDia[2], menuDia[3]]
       });
 
       //Siguiente día
-      dias.splice(dias.indexOf(dia),1);
+      dias.splice(dias.indexOf(dia), 1);
     }
 
     //Devuelvo el menú ordenado por fecha
@@ -101,7 +104,7 @@ Meteor.methods({
 
 
 
-function inicializarSemana():Date[]{
+function inicializarSemana(): Date[] {
 
   let now = new Date();
   let endDate = new Date();
@@ -115,29 +118,41 @@ function inicializarSemana():Date[]{
   return semana;
 }
 
-function inicializarConsumo(nutrientes:Nutriente[]):consumoNutrientes[]{
+function inicializarConsumo(nutrientes: Nutriente[], consumoDia?: consumoNutrientes[]): consumoNutrientes[] {
 
-  let consumo:consumoNutrientes[] = [];
-  let consumoDiario:number;
-  let minDiario:number;
-  let consumoSemanal:number;
-  let maxSemanal:number;
-  for(let i = 0; i < nutrientes.length; i++){
-
-    //Si son nutrientes diarios
-    if(nutrientes[i].minDia != null){
-      minDiario = nutrientes[i].minDia
-      consumoDiario = 0;
-      consumoSemanal = 0;
-      maxSemanal = null;
-    }else{ //Si son nutrientes semanales
-      consumoDiario = null;
-      minDiario = null;
-      consumoSemanal = 0;
-      maxSemanal = nutrientes[i].maxSem;
+  let consumo: consumoNutrientes[] = [];
+  let consumoDiario: number;
+  let minDiario: number;
+  let consumoSemanal: number;
+  let maxSemanal: number;
+  for (let i = 0; i < nutrientes.length; i++) {
+    if (consumoDia != undefined) {//Si inicializarConsumoDiario
+      if (nutrientes[i].minDia != null) {
+        minDiario = nutrientes[i].minDia
+        consumoDiario = 0;
+        consumoSemanal = consumoDia[i].consumoSemanal;
+        maxSemanal = null;
+      } else {
+        consumoDiario = null;
+        minDiario = null;
+        consumoSemanal = consumoDia[i].consumoSemanal;
+        maxSemanal = nutrientes[i].maxSem;
+      }
+    } else { //Si inicializar consumoSemanal
+      if (nutrientes[i].minDia != null) {//Si el nutriente es diario
+        minDiario = nutrientes[i].minDia
+        consumoDiario = 0;
+        consumoSemanal = 0;
+        maxSemanal = null;
+      } else { //Si el nutriente es semanal
+        consumoDiario = null;
+        minDiario = null;
+        consumoSemanal = 0;
+        maxSemanal = nutrientes[i].maxSem;
+      }
     }
     consumo.push({
-      nutriente:nutrientes[i]._id,
+      nutriente: nutrientes[i]._id,
       consumoDiario: consumoDiario,
       minDiario: minDiario,
       consumoSemanal: consumoSemanal,
@@ -147,50 +162,101 @@ function inicializarConsumo(nutrientes:Nutriente[]):consumoNutrientes[]{
   return consumo;
 }
 
-function getAleatorio(a:any[]):any{
-  return a[ Math.floor(Math.random() * a.length)];
+
+
+function getAleatorio(a: any[]): any {
+  return a[Math.floor(Math.random() * a.length)];
 }
 
-function getNutrientesValidos(consumo:consumoNutrientes[]):string[]{
+function getNutrientesValidos(consumo: consumoNutrientes[], menuDia: Plato[]): string[] {
 
-  let nutrientes:string[] = [];
+  let nutrientes: string[] = [];
 
-  //Primero los nutrientes diarios
-  for(let i=0;i<consumo.length;i++){
-    if(consumo[i].minDiario != null){
-      if(consumo[i].consumoDiario < consumo[i].minDiario){
-        nutrientes.push(consumo[i].nutriente);
-      }
+  for (let i = 0; i < consumo.length; i++) {
+    let nutriente: string = consumo[i].nutriente;
+    if (esNutrienteValido(nutriente, consumo, menuDia)) {
+      nutrientes.push(nutriente);
     }
-  }
-  //Si ya se han repartido entonces los semanales
-  if(nutrientes.length == 0){
-    for(let i=0;i<consumo.length;i++){
-      if(consumo[i].maxSemanal != null){
-        if(consumo[i].consumoSemanal < consumo[i].maxSemanal){
-          nutrientes.push(consumo[i].nutriente);
-        }
-      }else{ //Si no tiene consumo maxSemanal siempre es valido
-        nutrientes.push(consumo[i].nutriente);
-      }
-    }
+
   }
 
   return nutrientes;
 
 }
 
-function getPlatosValidos(nutriente:string, consumo:consumoNutrientes[], platosDia:Plato[], menuActual:Menu, menuAnterior:Menu):Plato[]{
+function getNutrientesNoValidos(consumo: consumoNutrientes[], menuDia: Plato[]): string[] {
+
+  let nutrientes: string[] = [];
+
+  for (let i = 0; i < consumo.length; i++) {
+    let nutriente: string = consumo[i].nutriente;
+    if (!esNutrienteValido(nutriente, consumo, menuDia)) {
+      nutrientes.push(nutriente);
+    } 
+
+  }
+  return nutrientes;
+
+}
+
+function esNutrienteValido(nutriente: string, consumo: consumoNutrientes[], menuDia: Plato[]): boolean {
+
+  let nombreNutrientesDia: string[] = [];
+  let tiposNutrientesDia: string[] = [];
+
+
+  //Cojo los nutrientes que ya se han consumido en el día
+  for (let i = 0; i < menuDia.length; i++) {
+    for (let j = 0; j < menuDia[i].nutrientes.length; j++) {
+      nombreNutrientesDia.push(menuDia[i].nutrientes[j]);
+    }
+  }
+
+  //Cojo los tipos de nutrientes que ya se han consumido en el día
+ let nutrientes: Nutriente[] = Nutrientes.find().fetch();
+ let nutrientesDia: Nutriente[] = Nutrientes.find({_id:{$in:nombreNutrientesDia}}).fetch();
+
+  for (let i = 0; i < nutrientes.length; i++) {
+    if (nutrientes[i]._id == nutriente) {
+      let tiposNutriente: string = nutrientes[i].tipos.toString();
+      if(tiposNutriente == 'VERDURA'){ //Si solo es verdura
+        return true;
+      }
+      for (let j = 0; j < nutrientesDia.length; j++) {
+        let tiposNutrientePlatoDia: string = nutrientesDia[j].tipos.toString();
+        if (tiposNutriente == tiposNutrientePlatoDia) { //Tienen los mismos tipos de nutriente
+          return false;
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < consumo.length; i++) {
+    if (consumo[i].nutriente == nutriente) {
+      if (consumo[i].maxSemanal != null) {
+        if (consumo[i].consumoSemanal < consumo[i].maxSemanal) {
+            return true;
+          }
+        else { //Si ya se ha consumido el máximoSemanal
+          return false;
+        }
+      } 
+    }
+
+  }
+
+}
+
+function getPlatosValidos(nutrientesValidos: string[], consumo: consumoNutrientes[], platosDia: Plato[], menuActual: Menu, menuAnterior: Menu): Plato[] {
 
   let platos: Plato[] = [];
   let platosSemana = [];
   let platosSemanaAnterior = [];
   let platosHoy = [];
-
-  let nutrientesValidos:string[] = getNutrientesValidos(consumo);
+  let nutrientesNoValidos: string[] = getNutrientesNoValidos(consumo, platosDia);
 
   //Recojo los platos del día
-  for(let i=0; i< platosDia.length;i++){
+  for (let i = 0; i < platosDia.length; i++) {
     platosHoy.push(platosDia[i]._id);
   }
 
@@ -204,39 +270,52 @@ function getPlatosValidos(nutriente:string, consumo:consumoNutrientes[], platosD
   //1. Que sea un plato que contenga el nutriente
   //2. Que sea un plato que no esté ya metido en el menú
   platos = Platos.find({
-    _id: {
-      //$and: [{
-        $nin: platosHoy
-      //},{
-        //$nin:platosSemana
-      //}]
-    },
-    nutrientes: {
-      $elemMatch:{
-          $eq: nutriente
+    $and: [
+      {
+        _id:
+        {
+          $nin: platosHoy
+        }
       },
+      {
+        _id:
+        {
+          $nin: platosSemana
+        }
+      },
+      {
+        nutrientes:
+        {
+          $nin: nutrientesNoValidos
+        }
+      },
+      {
+        nutrientes:
+        {
+          $in: nutrientesValidos
+        }
+      }
+    ]
+  }).fetch();
 
-      $in: nutrientesValidos
+  /*if (platos.length == 0) {
+    platos = Platos.find().fetch();
+  }*/
 
-    }}).fetch();
-
-    if(platos.length == 0) {
-      platos = Platos.find().fetch();
-    }
-
-    return platos;
+  return platos;
 }
 
-function consumirNutrientesPlato(plato:Plato,consumo:consumoNutrientes[]):consumoNutrientes[]{
-  let nutrientesPlato:string[] = [];
+function consumirNutrientesPlato(plato: Plato, consumo: consumoNutrientes[]): consumoNutrientes[] {
+  let nutrientesPlato: string[] = [];
 
-  for(let i =0;i<plato.nutrientes.length;i++){
-    for(let j = 0; j< consumo.length;j++){
-      if (consumo[i].nutriente == plato.nutrientes[i]){
-        if(consumo[i].minDiario != null && consumo[i].minDiario < consumo[i].consumoDiario){ //Si es reparto diario de nutrientes
-          consumo[i].consumoDiario++;
-        }else{ //Si es reparto semanal de nutrientes
-          consumo[i].consumoSemanal++;
+  for (let i = 0; i < plato.nutrientes.length; i++) {
+    for (let j = 0; j < consumo.length; j++) {
+      if (consumo[j].nutriente == plato.nutrientes[i]) {
+        if (consumo[j].minDiario != null && consumo[j].minDiario > consumo[j].consumoDiario) { //Si es reparto diario de nutrientes
+          consumo[j].consumoDiario++;
+          consumo[j].consumoSemanal++;
+        } else { //Si es reparto semanal de nutrientes
+          consumo[j].consumoSemanal++;
         }
       }
     }
@@ -244,12 +323,12 @@ function consumirNutrientesPlato(plato:Plato,consumo:consumoNutrientes[]):consum
   return consumo;
 }
 
-function getPlatosMenu(menu:Menu):string[]{
+function getPlatosMenu(menu: Menu): string[] {
 
   let platos: string[] = [];
-  for(let i = 0; i < menu.dieta.length; i++){
+  for (let i = 0; i < menu.dieta.length; i++) {
     let j = 0;
-    while( j < 2 ){
+    while (j < 2) {
       platos.push(menu.dieta[i].almuerzo[j]._id);
       platos.push(menu.dieta[i].cena[j]._id);
       j++;
@@ -258,13 +337,24 @@ function getPlatosMenu(menu:Menu):string[]{
   return platos;
 }
 
+function getTiposNutriente(nombreNutriente: string): string[] {
+  let nutriente: Nutriente = Nutrientes.findOne({ nombre: nombreNutriente });
+  let tiposNutriente: string[] = [];
+
+  for (let i = 0; i < nutriente.tipos.length; i++) {
+    tiposNutriente.push(nutriente.tipos[i]);
+  }
+
+  return tiposNutriente;
+}
+
 //Falta meter del usuario
-function getMenuAnterior():any{
-  return Menus.find({},{sort:{numero:-1},limit:1});
+function getMenuAnterior(): any {
+  return Menus.find({}, { sort: { numero: -1 }, limit: 1 });
 }
 
 
-function ordenarMenu(menu:Menu){
+function ordenarMenu(menu: Menu) {
   menu.dieta.sort(function (a, b) {
     if (a.fecha > b.fecha) {
       return 1;
@@ -273,13 +363,13 @@ function ordenarMenu(menu:Menu){
       return -1;
     }
     // a must be equal to b
-      return 0;
+    return 0;
   });
 }
 
-function flat (r,a){
-  if(Array.isArray(a)){
-    return a.reduce(flat,r);
+function flat(r, a) {
+  if (Array.isArray(a)) {
+    return a.reduce(flat, r);
   }
   r.push(a);
   return r;

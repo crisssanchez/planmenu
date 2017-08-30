@@ -54,8 +54,13 @@ export class PlatosComponent implements OnInit, OnDestroy{
   }
 
   insertPlato(plato: Plato):void{
-    Platos.insert({nombre: "Menestra", dificultad:DIFICULTAD.MEDIA,tiempo:30,tipos:[TIPOPLATO.ACOMPAÑAMIENTO],nutrientes:["VERDURA/HORTALIZA"], momentos:[MOMENTO.ALMUERZO]});
+   // Platos.insert({nombre: "Menestra", dificultad:DIFICULTAD.MEDIA,tiempo:30,tipos:[TIPOPLATO.ACOMPAÑAMIENTO],nutrientes:["VERDURA/HORTALIZA"], momentos:[MOMENTO.ALMUERZO]});
   }
+
+  generarPlatos(){
+    MeteorObservable.call('generarPlatosAleatorios').subscribe();
+  }
+
 
   ngOnDestroy(){
     this.platosSub.unsubscribe();

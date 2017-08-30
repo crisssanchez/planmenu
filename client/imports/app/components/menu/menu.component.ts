@@ -18,8 +18,6 @@ import template from './menu.component.html';
 export class MenuComponent implements OnInit, OnDestroy{
 
   idMenu: string;
-  generado:boolean = false;
-  prueba:string ="PRUEBA";
 
   paramsSub: Subscription;
   menu: Menu;
@@ -53,7 +51,6 @@ export class MenuComponent implements OnInit, OnDestroy{
   generarMenu(){
     MeteorObservable.call('generarMenuSemana').subscribe(
       (result: Menu) => {
-        this.generado = true;
         this.menu = result;
         console.log(result);
       },
