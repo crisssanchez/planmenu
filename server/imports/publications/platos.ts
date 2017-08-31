@@ -1,4 +1,4 @@
-import { ingredientePlato } from '../../../both/models/plato.model';
+import { ingredientePlato, Plato } from '../../../both/models/plato.model';
 import { Ingrediente } from '../../../both/models/ingrediente.model';
 import { Nutriente } from '../../../both/models/nutriente.model';
 import { Nutrientes } from '../../../both/collections/nutrientes.collection';
@@ -14,6 +14,10 @@ Meteor.publish('plato', function (idPlato: string) {
 });
 
 Meteor.methods({
+  guardarPlato(plato: Plato) {
+    Platos.insert(plato);
+  },
+
   generarPlatosAleatorios() {
     for (let i = 0; i < 1000; i++) {
       Platos.insert({
