@@ -5,21 +5,21 @@ import { Ingrediente } from './ingrediente.model';
 
 export interface ingredientePlato{
   ingrediente: string,
-  cantidad: number,
-  medida: string
+  cantidad?: number,
+  medida?: string
 }
 
 export interface Plato extends CollectionObject{
   nombre: string;
   descripcion?: string;
-  dificultad?: string;
-  tiempo?: number;
-  tipos?: string[];
-  momentos?: string[];
-  nutrientes: string[];
-  temporada?: string[];
-  ingredientes?: ingredientePlato [];
-  infoNutricional?: {
+  dificultad?: string; // BAJA, MEDIA, ALTA
+  tiempo?: number; // En minutos
+  tipos?: string[]; // PRIMERO, SEGUNDO
+  momentos?: string[]; // ALMUERZO, CENA
+  nutrientes: string[]; // De la base de datos
+  temporada?: string[]; // PRIMAVERA, VERANO, OTOÑO INVIERNO
+  ingredientes?: ingredientePlato[];
+  infoNutricional?: { 
     calorias?: number;
     proteinas: number,
     carbohidratos: number,

@@ -1,19 +1,173 @@
-
-<div class="col-xs-1"></div>
+<div class="col-xs-1">
+</div>
 <div class="container cabecera col-xs-6">
-    <div class="navegacion row">
-      <div class="col-xs-5 titulo text-center">
-          <h4 style="color:grey;float:left;" id="titulo">Nuevo plato</h4>
-      </div>
-    </div>
+  <div class="navegacion row">
+    <div class="col-xs-5 titulo text-center">
+      <h4 style="color:grey;float:left;"
+        id="titulo">Nuevo plato</h4>
     </div>
   </div>
-<div class="container separador bg-success col-xs-7 col-lg-7" style="opacity:0.3;height:50%;margin-bottom:30px;"></div>
+</div>
+</div>
+<div class="container separador bg-success col-xs-7 col-lg-7"
+  style="opacity:0.3;height:50%;margin-bottom:30px;"></div>
 
-<div class="col-xs-1"></div>
-<div class="container col-xs-6">
+<div class="container">
   <div class="row">
+    <div class="col-xs-7">
 
-    
+      <form #f>
+
+        <div class="form-group">
+          <input type="text"
+            name="nombre"
+            [(ngModel)]="nombre"
+            class="form-control"
+            placeholder="Nombre del plato">
+        </div>
+
+        <div class="form-group">
+          <div class="input-group">
+            <input type="number"
+              name="tiempo"
+              [(ngModel)]="tiempo"
+              class="form-control"
+              placeholder="Tiempo de cocinado en minutos">
+            <span class="input-group-addon">min.</span>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+          <h1>
+            <span class="label"
+              [ngClass]="{'label-default': dificultad != 'BAJA', 'label-success': dificultad == 'BAJA'}"
+              (click)="selectDificultad('BAJA')">Baja</span>
+            <span class="label label-default"
+              [ngClass]="{'label-default': dificultad != 'MEDIA', 'label-warning': dificultad == 'MEDIA'}"
+              (click)="selectDificultad('MEDIA')">Media</span>
+            <span class="label label-default"
+              [ngClass]="{'label-default': dificultad != 'ALTA', 'label-danger': dificultad == 'ALTA'}"
+              (click)="selectDificultad('ALTA')">Alta</span>
+          </h1>
+
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+          <h1>
+            <span class="label"
+              (click)="primero = !primero"
+              [ngClass]="{'label-default': !primero, 'label-primary': primero}">Primer plato</span>
+            <span class="label"
+              (click)="segundo = !segundo"
+              [ngClass]="{'label-default': !segundo, 'label-primary': segundo}">Segundo plato</span>
+          </h1>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+          <h1>
+            <span class="label"
+              (click)="almuerzo = !almuerzo"
+              [ngClass]="{'label-default': !almuerzo, 'label-primary': almuerzo}">Almuerzo</span>
+            <span class="label"
+              (click)="cena = !cena"
+              [ngClass]="{'label-default': !cena, 'label-primary': cena}">Cena</span>
+          </h1>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+          <h1>
+            <span class="label"
+              (click)="primavera = !primavera"
+              [ngClass]="{'label-default': !primavera, 'label-primary': primavera}">Primavera</span>
+            <span class="label"
+              (click)="verano = !verano"
+              [ngClass]="{'label-default': !verano, 'label-primary': verano}">Verano</span>
+            <span class="label"
+              (click)="otono = !otono"
+              [ngClass]="{'label-default': !otono, 'label-primary': otono}">Otoño</span>
+            <span class="label"
+              (click)="invierno = !invierno"
+              [ngClass]="{'label-default': !invierno, 'label-primary': invierno}">Invierno</span>
+          </h1>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+          <h1>
+            <span class="label label-for"
+              (click)="nutrientes[nutriente] = !nutrientes[nutriente]"
+              [ngClass]="{'label-default': !nutrientes[nutriente], 'label-primary': nutrientes[nutriente]}"
+              *ngFor="let nutriente of posiblesNutrientes">
+              {{ nutriente }}
+            </span>
+          </h1>
+        </div>
+        <br>
+        <br>
+
+        <div class="form-group">
+          <textarea id="description"
+            rows=6
+            name="description"
+            [(ngModel)]="descripcion"
+            placeholder="Descripción del plato"
+            class="form-control"></textarea>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="form-group"
+          style="margin-bottom: 50px;">
+          <button type="button" class="btn btn-primary" (click)="guardarPlato()">GUARDAR PLATO</button>
+
+        </div>
+
+        <br>
+        <br>
+
+        <div class="form-group"
+          style="margin-bottom: 20px;"
+          *ngFor="let ingrediente of ingredientes; let i = index">
+          <div class="col-xs-6">
+            <input type="text"
+              [(ngModel)]="ingrediente.ingrediente"
+              class="form-control"
+              placeholder="Ingrediente..."
+              (keydown.Tab)="addIngrediente()"
+              [ngModelOptions]="{standalone: true}">
+          </div>
+          <div class="col-xs-1">
+            <button class="btn btn-danger"
+              (click)="deleteIngrediente(i)">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <hr>
+        <br>
+        <button class="btn btn-default"
+          style="margin: 20px 0;"
+          type="button"
+          (click)="addIngrediente()">Añadir ingrediente</button>
+
+        <br>
+        <br>
+        <br>
+
+
+      </form>
+
+    </div>
   </div>
 </div>
