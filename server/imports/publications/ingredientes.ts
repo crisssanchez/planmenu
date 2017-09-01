@@ -6,3 +6,13 @@ Meteor.publish('ingredientes', () => Ingredientes.find());
 Meteor.publish('ingrediente', function(idIngrediente:string){
   return Ingredientes.find({_id:idIngrediente});
 });
+
+Meteor.methods({
+  addIngrediente(nombre: string) {
+    if (!Ingredientes.collection.find({nombre:{'$regex' : nombre, '$options' : 'i'}}).count()) {
+      Ingredientes.insert({
+        nombre: nombre
+      });
+    }
+  }
+});

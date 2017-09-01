@@ -12,6 +12,8 @@ import { Platos } from '../../../../../both/collections/platos.collection';
 import template from './nuevoPlato.component.html';
 import style from './nuevoPlato.component.less';
 import { Ingrediente } from '../../../../../both/models/ingrediente.model';
+import { Ingredientes } from '../../../../../both/collections/ingredientes.collection';
+import { Meteor } from 'meteor/meteor';
 
 @Component({
   selector: 'nuevoPlato',
@@ -21,6 +23,9 @@ import { Ingrediente } from '../../../../../both/models/ingrediente.model';
 export class NuevoPlatoComponent implements OnInit, OnDestroy {
 
   @ViewChild('f') form: NgForm;
+
+  ingSub: Subscription;
+  ings: Ingrediente[];
 
   nombre: string;
   imagenUrl: string;
@@ -58,6 +63,7 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
 
   resetValues() {
     this.nombre = undefined;
+    this.imagenUrl = undefined;
     this.tiempo = undefined;
     this.descripcion = undefined;
     this.dificultad = undefined;
@@ -75,13 +81,30 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    this.ingSub = MeteorObservable.subscribe('ingredientes').subscribe(() => {
+      //this.ings = Ingredientes.collection.find().fetch();
+    });
+
     for (let nutriente in this.posiblesNutrientes) {
       this.nutrientes[nutriente] = false;
     }
 
   }
+
   ngOnDestroy() {
 
+  }
+
+  findIngs(nombre) {
+    if (!nombre) {
+      this.resetIngs();
+    } else {
+      this.ings = Ingredientes.collection.find({nombre:{'$regex' : '^' + nombre, '$options' : 'i'}}).fetch();
+    }
+  }
+
+  resetIngs() {
+    this.ings = [];
   }
 
   selectDificultad(dif: string) {
@@ -91,9 +114,22 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
   addIngrediente() {
     if (this.ingredientes.length === 0 || this.ingredientes[this.ingredientes.length - 1].ingrediente !== '') {
       this.ingredientes.push({
-        ingrediente: ''
+        ingrediente: '',
+        opened: false
       });
     } 
+  }
+
+  setIngText(i: number, ing: string) {
+    this.ingredientes[i].ingrediente = ing;
+    this.ingredientes[i].opened = false;
+  }
+
+  setValueFirstIng(i: number) {
+    if (this.ings && this.ings.length) {
+      this.ingredientes[i].ingrediente = this.ings[0].nombre;
+      this.ingredientes[i].opened = false;
+    }
   }
 
   deleteIngrediente(index: number) {
@@ -150,6 +186,7 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
     }
     for (let ingrediente of this.ingredientes) {
       plato.ingredientes.push(ingrediente.ingrediente);
+      MeteorObservable.call('addIngrediente', ingrediente.ingrediente).subscribe(() => {});
     }
 
     MeteorObservable.call('guardarPlato', plato).subscribe(() => {

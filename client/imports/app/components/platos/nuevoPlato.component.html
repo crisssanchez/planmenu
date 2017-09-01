@@ -27,15 +27,17 @@
         </div>
 
         <div class="form-group">
-            <input type="text"
-              name="imagenUrl"
-              [(ngModel)]="imagenUrl"
-              class="form-control"
-              placeholder="Enlace imagen">
-          </div>
+          <input type="text"
+            name="imagenUrl"
+            [(ngModel)]="imagenUrl"
+            class="form-control"
+            placeholder="Enlace imagen">
+        </div>
 
         <div class="form-group">
-          <img [src]="imagenUrl" *ngIf="imagenUrl" height="200" />
+          <img [src]="imagenUrl"
+            *ngIf="imagenUrl"
+            height="200" />
         </div>
 
         <div class="form-group">
@@ -135,14 +137,16 @@
             class="form-control"></textarea>
         </div>
 
-        
+
 
         <br>
         <br>
 
         <div class="form-group"
           style="margin-bottom: 50px;">
-          <button type="button" class="btn btn-primary" (click)="guardarPlato()">GUARDAR PLATO</button>
+          <button type="button"
+            class="btn btn-primary"
+            (click)="guardarPlato()">GUARDAR PLATO</button>
 
         </div>
 
@@ -157,12 +161,28 @@
               [(ngModel)]="ingrediente.ingrediente"
               class="form-control"
               placeholder="Ingrediente..."
-              (keydown.Tab)="addIngrediente()"
-              (keydown.Enter)="addIngrediente()"
+              (keydown.Tab)="setValueFirstIng(i); addIngrediente();"
+              (keydown.Enter)="setValueFirstIng(i); addIngrediente();"
+              (keydown)="findIngs($event.target.value)"
+              (focus)="ingrediente.opened = true"
+              (focusout)="ingrediente.opened = false; resetIngs();"
               [ngModelOptions]="{standalone: true}">
+            <ul class="list-group"
+              style="position: absolute; float:left; width: 150px;"
+              *ngIf="ingrediente.opened && ings">
+              <li class="list-group-item"
+                *ngFor="let ing of ings">
+                <a role="button"
+                  (click)="setIngText(i,ing.nombre)">
+                    {{ ing.nombre }}
+                </a>
+              </li>
+            </ul>
           </div>
+
           <div class="col-xs-1">
-            <button class="btn btn-danger" type="button"
+            <button class="btn btn-danger"
+              type="button"
               (click)="deleteIngrediente(i)">
               <i class="fa fa-times"></i>
             </button>
