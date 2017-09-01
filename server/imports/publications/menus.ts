@@ -58,7 +58,8 @@ Meteor.methods({
 
       let menuDia: Plato[] = [];
 
-      let dia = getAleatorio(dias);
+      //let dia:Date = getAleatorio(dias);
+      let dia:Date = dias[0];
       let totalPlatosDia = 4;
 
 
@@ -66,12 +67,15 @@ Meteor.methods({
 
         let plato: Plato;
         let nutrientesValidos: string[];
-
+        let momento: string = getMomento(menuDia.length);
+        let tipo: string = getTipo(menuDia.length);
+        
         //Obtengo un nutriente aleatorio de entre los nutrientes validos (que no superan el consumo)
         nutrientesValidos = getNutrientesValidos(consumo, menuDia);
 
         //Obtengo un plato aleatorio de entre los platos válidos (que cumplan las condiciones)
-        plato = getAleatorio(getPlatosValidos(nutrientesValidos, consumo, menuDia, menu, menuAnterior));
+        plato = getAleatorio(getPlatosValidos(nutrientesValidos, consumo, momento, tipo, dia, menuDia, menu, menuAnterior));
+
         consumirNutrientesPlato(plato, consumo);
 
         //Añado el plato al día
@@ -81,7 +85,6 @@ Meteor.methods({
           nutrientes: plato.nutrientes
         });
 
-        consumo = inicializarConsumo(nutrientes, consumo);
       }
 
       //Añado los platos al menú del día
@@ -91,8 +94,11 @@ Meteor.methods({
         cena: [menuDia[2], menuDia[3]]
       });
 
+      //Inicializo el consumo diario
+      consumo = inicializarConsumo(nutrientes, consumo);
+
       //Siguiente día
-      dias.splice(dias.indexOf(dia), 1);
+      dias.splice(0, 1);
     }
 
     //Devuelvo el menú ordenado por fecha
@@ -172,16 +178,22 @@ function getNutrientesValidos(consumo: consumoNutrientes[], menuDia: Plato[]): s
 
   let nutrientes: string[] = [];
 
+  //Primero nos aseguramos que se han consumido los nutrientes diarios
   for (let i = 0; i < consumo.length; i++) {
     let nutriente: string = consumo[i].nutriente;
-    if (esNutrienteValido(nutriente, consumo, menuDia)) {
+    if (consumo[i].minDiario != null && consumo[i].minDiario > consumo[i].consumoDiario) {
       nutrientes.push(nutriente);
     }
-
   }
-
+  if (nutrientes.length == 0) { //Si ya se han repartido los mínimos diarios
+    for (let i = 0; i < consumo.length; i++) {
+      let nutriente: string = consumo[i].nutriente;
+      if (esNutrienteValido(nutriente, consumo, menuDia)) {
+        nutrientes.push(nutriente);
+      }
+    }
+  }
   return nutrientes;
-
 }
 
 function getNutrientesNoValidos(consumo: consumoNutrientes[], menuDia: Plato[]): string[] {
@@ -192,7 +204,7 @@ function getNutrientesNoValidos(consumo: consumoNutrientes[], menuDia: Plato[]):
     let nutriente: string = consumo[i].nutriente;
     if (!esNutrienteValido(nutriente, consumo, menuDia)) {
       nutrientes.push(nutriente);
-    } 
+    }
 
   }
   return nutrientes;
@@ -213,13 +225,13 @@ function esNutrienteValido(nutriente: string, consumo: consumoNutrientes[], menu
   }
 
   //Cojo los tipos de nutrientes que ya se han consumido en el día
- let nutrientes: Nutriente[] = Nutrientes.find().fetch();
- let nutrientesDia: Nutriente[] = Nutrientes.find({_id:{$in:nombreNutrientesDia}}).fetch();
+  let nutrientes: Nutriente[] = Nutrientes.find().fetch();
+  let nutrientesDia: Nutriente[] = Nutrientes.find({ _id: { $in: nombreNutrientesDia } }).fetch();
 
   for (let i = 0; i < nutrientes.length; i++) {
     if (nutrientes[i]._id == nutriente) {
       let tiposNutriente: string = nutrientes[i].tipos.toString();
-      if(tiposNutriente == 'VERDURA'){ //Si solo es verdura
+      if (tiposNutriente == 'VERDURA') { //Si solo es verdura
         return true;
       }
       for (let j = 0; j < nutrientesDia.length; j++) {
@@ -235,24 +247,25 @@ function esNutrienteValido(nutriente: string, consumo: consumoNutrientes[], menu
     if (consumo[i].nutriente == nutriente) {
       if (consumo[i].maxSemanal != null) {
         if (consumo[i].consumoSemanal < consumo[i].maxSemanal) {
-            return true;
-          }
+          return true;
+        }
         else { //Si ya se ha consumido el máximoSemanal
           return false;
         }
-      } 
+      }
     }
 
   }
 
 }
 
-function getPlatosValidos(nutrientesValidos: string[], consumo: consumoNutrientes[], platosDia: Plato[], menuActual: Menu, menuAnterior: Menu): Plato[] {
+function getPlatosValidos(nutrientesValidos: string[], consumo: consumoNutrientes[], momento:string, tipo:string, dia:Date, platosDia: Plato[], menuActual: Menu, menuAnterior: Menu): Plato[] {
 
   let platos: Plato[] = [];
   let platosSemana = [];
   let platosSemanaAnterior = [];
   let platosHoy = [];
+  let platosAyer = [];
   let nutrientesNoValidos: string[] = getNutrientesNoValidos(consumo, platosDia);
 
   //Recojo los platos del día
@@ -263,12 +276,24 @@ function getPlatosValidos(nutrientesValidos: string[], consumo: consumoNutriente
   //Recojo los platos de la semana
   platosSemana = getPlatosMenu(menuActual);
 
+  //Recojo los platos del día anterior
+  if(menuActual.dieta.length != 0){
+    for(let i = 0; i < menuActual.dieta.length;i++){
+      if(menuActual.dieta[i].fecha == dia){
+        platosAyer.push(menuActual.dieta[i].almuerzo);
+      }
+    }
+  }
+
   //Recojo los platos de la semana anterior
   //platosSemanaAnterior = getIdPlatosMenu(menuAnterior);
 
   //Que cumpla las condiciones
   //1. Que sea un plato que contenga el nutriente
   //2. Que sea un plato que no esté ya metido en el menú
+  //3. Que sea un plato del momento (ALMUERZO/CENA)
+  //4. Que sea un plato del tipo (PRIMERO/SEGUNDO)
+  //5. Que sea un plato que no esté en el día anterior
   platos = Platos.find({
     $and: [
       {
@@ -294,13 +319,26 @@ function getPlatosValidos(nutrientesValidos: string[], consumo: consumoNutriente
         {
           $in: nutrientesValidos
         }
+      },
+      {
+        momentos: 
+        {
+          $in: [momento]
+        }
+      },
+      {
+        tipos: 
+        {
+          $in: [tipo]
+        }
       }
     ]
   }).fetch();
 
-  /*if (platos.length == 0) {
+  if (platos.length == 0) {
     platos = Platos.find().fetch();
-  }*/
+    console.log('No encuentra plato para las condiciones');
+  }
 
   return platos;
 }
@@ -365,6 +403,22 @@ function ordenarMenu(menu: Menu) {
     // a must be equal to b
     return 0;
   });
+}
+
+function getMomento(posicionMenu:number):string{
+  if(posicionMenu == 0 || posicionMenu == 1  ){
+    return 'ALMUERZO';
+  }else{
+    return 'CENA';
+  }
+}
+
+function getTipo(posicionMenu:number):string{
+  if(posicionMenu == 0 || posicionMenu == 2){
+    return 'PRIMERO';
+  }else{
+    return 'SEGUNDO';
+  }
 }
 
 function flat(r, a) {

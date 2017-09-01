@@ -47,7 +47,7 @@
             <div class="thumbnail impar">
               <div class="opciones">
               </div>
-              <img src="images/{{p.nombre}}.jpg" class="img-circle">
+              <img [src]="p.imagenUrl" class="img-circle"/>
               <h6>{{p.nombre}}</h6>
             </div>
           </div>
@@ -67,7 +67,7 @@
         <div class="plato" >
           <div class="thumbnail impar">
             <div class="opciones"></div>
-            <img src="images/{{p.nombre}}.jpg" class="img-circle">
+            <img [src]="p.imagenUrl" class="img-circle">
             <h6>{{p.nombre}}</h6>
           </div>
         </div>

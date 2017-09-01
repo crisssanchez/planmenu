@@ -11,6 +11,7 @@ import { Platos } from '../../../../../both/collections/platos.collection';
 
 import template from './nuevoPlato.component.html';
 import style from './nuevoPlato.component.less';
+import { Ingrediente } from '../../../../../both/models/ingrediente.model';
 
 @Component({
   selector: 'nuevoPlato',
@@ -22,6 +23,7 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
   @ViewChild('f') form: NgForm;
 
   nombre: string;
+  imagenUrl: string;
   tiempo: number;
   descripcion: string;
   dificultad: string;
@@ -29,10 +31,10 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
   segundo: boolean = false;
   almuerzo: boolean = false;
   cena: boolean = false;
-  primavera: boolean = false;
-  verano: boolean = false;
-  otono: boolean = false;
-  invierno: boolean = false;
+  primavera: boolean = true;
+  verano: boolean = true;
+  otono: boolean = true;
+  invierno: boolean = true;
 
   posiblesNutrientes = [
     "LEGUMBRE",
@@ -43,9 +45,11 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
     "VERDURA",
     "HUEVO",
     "PATATA",
+    "PASTA",
     "ARROZ",
     "FRITO",
-    "MARISCO"
+    "MARISCO",
+    "LACTEO"
   ];
 
   nutrientes = {};
@@ -85,9 +89,11 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
   }
 
   addIngrediente() {
-    this.ingredientes.push({
-      ingrediente: ''
-    });
+    if (this.ingredientes.length === 0 || this.ingredientes[this.ingredientes.length - 1].ingrediente !== '') {
+      this.ingredientes.push({
+        ingrediente: ''
+      });
+    } 
   }
 
   deleteIngrediente(index: number) {
@@ -101,6 +107,7 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
     };
 
     plato.nombre = this.nombre;
+    plato.imagenUrl = this.imagenUrl;
     plato.descripcion = this.descripcion;
     plato.dificultad = this.dificultad;
     plato.tiempo = this.tiempo;

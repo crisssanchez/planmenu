@@ -11,6 +11,7 @@ export interface ingredientePlato{
 
 export interface Plato extends CollectionObject{
   nombre: string;
+  imagenUrl?: string;
   descripcion?: string;
   dificultad?: string; // BAJA, MEDIA, ALTA
   tiempo?: number; // En minutos

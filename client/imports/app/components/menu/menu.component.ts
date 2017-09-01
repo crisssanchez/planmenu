@@ -97,6 +97,12 @@ export class MenuComponent implements OnInit, OnDestroy{
     if(nutriente == 'PATATA'){
       return "purple";
     }
+    if(nutriente == 'FRITO'){
+      return "gold";
+    }
+    if(nutriente == 'MARISCO'){
+      return "hotpink";
+    }
     return "black";
   }
 }

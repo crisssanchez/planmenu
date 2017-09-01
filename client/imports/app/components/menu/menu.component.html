@@ -1,24 +1,29 @@
-
 <div class="container cabecera col-xs-7">
-    <div class="page-header">
-      <div class="titulo col-xs-7">
-          <h4 *ngIf="menu">Menú {{menu._id}}</h4>
-          <button type="button" name="button" class="btn btn-success" (click)="generarMenu()">Generar</button>
-      </div>
-      <br><br>
+  <div class="page-header">
+    <div class="titulo col-xs-7">
+      <h4 *ngIf="menu">Menú {{menu._id}}</h4>
+      <button type="button"
+        name="button"
+        class="btn btn-success"
+        (click)="generarMenu()">Generar</button>
     </div>
+    <br><br>
+  </div>
 </div>
 
 <div *ngIf="menu">
 
   <div class="row">
-    <div class="col-sm-1" *ngFor="let dia of menu.dieta">
+    <div class="col-sm-1"
+      *ngFor="let dia of menu.dieta">
       {{ dia.fecha | date }}
       <h4>Almuerzo</h4>
       <ul class="list-group">
-        <li class="list-group-item" *ngFor="let plato of dia.almuerzo">
-          <div >{{ plato.nombre }}</div>
-          <div class="label" *ngFor="let nutriente of plato.nutrientes"
+        <li class="list-group-item"
+          *ngFor="let plato of dia.almuerzo">
+          <div>{{ plato.nombre }}</div>
+          <div class="label"
+            *ngFor="let nutriente of plato.nutrientes"
             [style.backgroundColor]="bgColor(nutriente)">
             {{ nutriente }}
           </div>
@@ -26,9 +31,11 @@
       </ul>
       <h4>Cena</h4>
       <ul class="list-group">
-        <li class="list-group-item" *ngFor="let plato of dia.cena">
-          <div >{{ plato.nombre }}</div>
-          <div class="label" *ngFor="let nutriente of plato.nutrientes"
+        <li class="list-group-item"
+          *ngFor="let plato of dia.cena">
+          <div>{{ plato.nombre }}</div>
+          <div class="label"
+            *ngFor="let nutriente of plato.nutrientes"
             [style.backgroundColor]="bgColor(nutriente)">
             {{ nutriente }}
           </div>
@@ -39,4 +46,4 @@
 
   </div>
 
-<div>
+  <div>

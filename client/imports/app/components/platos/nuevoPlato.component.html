@@ -27,6 +27,18 @@
         </div>
 
         <div class="form-group">
+            <input type="text"
+              name="imagenUrl"
+              [(ngModel)]="imagenUrl"
+              class="form-control"
+              placeholder="Enlace imagen">
+          </div>
+
+        <div class="form-group">
+          <img [src]="imagenUrl" *ngIf="imagenUrl" height="200" />
+        </div>
+
+        <div class="form-group">
           <div class="input-group">
             <input type="number"
               name="tiempo"
@@ -123,6 +135,8 @@
             class="form-control"></textarea>
         </div>
 
+        
+
         <br>
         <br>
 
@@ -144,10 +158,11 @@
               class="form-control"
               placeholder="Ingrediente..."
               (keydown.Tab)="addIngrediente()"
+              (keydown.Enter)="addIngrediente()"
               [ngModelOptions]="{standalone: true}">
           </div>
           <div class="col-xs-1">
-            <button class="btn btn-danger"
+            <button class="btn btn-danger" type="button"
               (click)="deleteIngrediente(i)">
               <i class="fa fa-times"></i>
             </button>

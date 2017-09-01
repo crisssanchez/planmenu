@@ -29,32 +29,11 @@
 </div><!--/container-->
 
 
-<!--<div class="col-xs-1"></div>
-<div class="container col-xs-6">
-
-  <div class="row">
-        <div *ngFor="let plato of platos | async">
-
-          <div class="plato col-xs-2">
-            <div class="thumbnail">
-              <img src="images/{{plato.nombre}}.jpg" class="img-circle">
-              <div class="col-xs-7">
-                  <a [routerLink]="['/recetaPlato', plato._id]" style="display:inline;" >{{plato.nombre}}</a>
-                  <button (click)="removePlato(plato)" hidden-xs title="Nuevo" class="cabecera icon icon-three icon-1x hidden-xs icon-new">
-                      <i class="fa fa-trash-o fa-1x"></i></button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-  </div>
-</div>-->
-
 <div class="container col-xs-7">
       <div class="row">
         <div class="col-xs-7 col-sm-2 col-md-1" *ngFor="let plato of platos | async" >
           <div class="thumbnail">
-            <img src="images/{{plato.nombre}}.jpg">
+            <img [src]="plato.imagenUrl">
               <div class="caption">
                 <h4><a [routerLink]="['/recetaPlato', plato._id]" style="display:inline;" >{{plato.nombre}}</a></h4>
                 <span class="label label-primary">{{plato.tiempo}} min</span>
