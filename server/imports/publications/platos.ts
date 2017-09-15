@@ -1,4 +1,4 @@
-import { ingredientePlato, Plato } from '../../../both/models/plato.model';
+import { Plato } from '../../../both/models/plato.model';
 import { Ingrediente } from '../../../both/models/ingrediente.model';
 import { Nutriente } from '../../../both/models/nutriente.model';
 import { Nutrientes } from '../../../both/collections/nutrientes.collection';
@@ -93,17 +93,11 @@ function getMedidaIngrediente(): any {
   return getAleatorio(medida);
 }
 
-function getIngredientesAleatorios():ingredientePlato[] {
+function getIngredientesAleatorios():string[] {
   let ingredientes: any[] = [];
   let num = getNumAleatorio(1, 5);
   for (let i = 0; i < num; i++) {
-    ingredientes.push(
-      {
-        ingrediente: getNombreAleatorio(),
-        cantidad: getNumAleatorio(1, 2),
-        medida: getMedidaIngrediente()
-      }
-    );
+    ingredientes.push(getNombreAleatorio());
   }
   return ingredientes;
 }

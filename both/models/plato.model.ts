@@ -1,13 +1,5 @@
 import { InternalFormsSharedModule } from '@angular/forms/src/directives';
 import { CollectionObject } from './collection-object.model';
-import { Ingrediente } from './ingrediente.model';
-
-
-export interface ingredientePlato{
-  ingrediente: string,
-  cantidad?: number,
-  medida?: string
-}
 
 export interface Plato extends CollectionObject{
   nombre: string;
@@ -19,7 +11,7 @@ export interface Plato extends CollectionObject{
   momentos?: string[]; // ALMUERZO, CENA
   nutrientes: string[]; // De la base de datos
   temporada?: string[]; // PRIMAVERA, VERANO, OTOÑO INVIERNO
-  ingredientes?: ingredientePlato[];
+  ingredientes?: string[];
   infoNutricional?: { 
     calorias?: number;
     proteinas: number,

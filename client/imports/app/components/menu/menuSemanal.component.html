@@ -1,29 +1,36 @@
-
 <div class="container cabecera col-md-7">
-    <div class="page-header">
-      <div class="col-md-6 titulo">
-          <h4>Menú Semanal</h4>
+  <div class="page-header">
+    <div class="col-md-6 titulo">
+      <h4>Menú Semanal</h4>
+      <!--<button type="button"
+      name="button"
+      class="btn btn-success"
+      (click)="addProductosMenuAlCarro()">AlCarro</button>-->
 
-      </div>
-
-      <div class="col-md-1 col-xs-1">
-        <ul class="nav nav-bar nav ">
-          <li>
-            <a hidden-xs title="Generar PDF" class="cabecera icon icon-three icon-1x hidden-xs icon-pdf" style="float: right;">
-              <i class="fa fa-print fa-2x"></i></a>
-          </li>
-          <li>
-            <a [routerLink]="['/carro']" title="Carro" class="cabecera icon icon-three icon-1x" style="float: right;">
-              <i class="fa fa-shopping-cart fa-2x"></i></a>
-          </li>
-        </ul>
-      </div>
-        <br><br>
     </div>
+
+    <div class="col-md-1 col-xs-1">
+      <ul class="nav nav-bar nav ">
+        <li>
+          <a hidden-xs
+            title="Generar PDF"
+            class="cabecera icon icon-three icon-1x hidden-xs icon-pdf"
+            style="float: right;">
+              <i class="fa fa-print fa-2x"></i></a>
+        </li>
+        <li>
+          <a [routerLink]="['/carro']"
+            title="Carro"
+            class="cabecera icon icon-three icon-1x"
+            style="float: right;">
+              <i class="fa fa-shopping-cart fa-2x"></i></a>
+        </li>
+      </ul>
+    </div>
+    <br><br>
+  </div>
 </div>
 <hr>
-
-
 
 <div class="menu">
   <div class="row">
@@ -39,15 +46,18 @@
     </div>
   </div>
 
-<div class="row">
+  <div class="row">
     <div *ngFor="let d of dieta; let dia = index">
-      <div class="col-md-1" >
-        <div *ngFor="let p of getPlatosAlmuerzo(dia)" class="row">
+      <div class="col-md-1">
+        <div *ngFor="let p of getPlatosAlmuerzo(dia)"
+          class="row">
           <div class="plato">
             <div class="thumbnail impar">
               <div class="opciones">
               </div>
-              <img [src]="p.imagenUrl" class="img-circle"/>
+              <div style="height: 150px; width: 100%; background-position: center; background-size: cover;"
+                [style.backgroundImage]="'url(' + p.imagenUrl + ')'">
+              </div>
               <h6>{{p.nombre}}</h6>
             </div>
           </div>
@@ -60,19 +70,22 @@
       Cena
     </div>
   </div>
-<div class="row">
-  <div *ngFor="let d of dieta; let dia = index">
-    <div class="col-md-1">
-      <div *ngFor="let p of getPlatosCena(dia)" class="row">
-        <div class="plato" >
-          <div class="thumbnail impar">
-            <div class="opciones"></div>
-            <img [src]="p.imagenUrl" class="img-circle">
-            <h6>{{p.nombre}}</h6>
+  <div class="row">
+    <div *ngFor="let d of dieta; let dia = index">
+      <div class="col-md-1">
+        <div *ngFor="let p of getPlatosCena(dia)"
+          class="row">
+          <div class="plato">
+            <div class="thumbnail impar">
+              <div class="opciones"></div>
+              <div style="height: 150px; width: 100%; background-position: center; background-size: cover;"
+              [style.backgroundImage]="'url(' + p.imagenUrl + ')'">
+              </div>
+              <h6>{{p.nombre}}</h6>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </div>

@@ -1,17 +1,36 @@
 <div class="container cabecera col-xs-7">
-    <div class="page-header">
-        <div class="titulo col-xs-5">
-          <h4>Carro de la compra</h4>
-        </div>
-        <br><br>
+  <div class="page-header">
+    <div class="titulo col-xs-5">
+      <h4>Carro de la compra</h4>
     </div>
+    <br><br>
+  </div>
 </div>
 
-<div class="container col-xs-7">
-  <ul>
-    <li>Gazpacho</li>
-    <li>Dorada</li>
-    <li>Espaguetis</li>
-    <li>Tomate</li>
-  </ul>
-</div>
+<table > 
+  <tr></tr>
+  <tr *ngFor="let objeto of listaCompra">
+    <td>
+        <a *ngIf="objeto.nombre != null"  class="button btn-xs pull-left "
+        role="button">
+              <i class="fa fa-square-o">  </i>
+            </a>
+    </td>
+    <td>
+        {{ objeto.nombre }} 
+    </td>
+    <td >(
+       <div style="display:inline" *ngFor="let plato of objeto.platos; let i = index">
+         <div style="display:inline" *ngIf = "i != 0">,</div> 
+          {{ plato }} 
+        </div> )
+    </td>
+    <td style="float:right">
+        <a *ngIf="objeto.nombre != null"  class="button"
+        role="button">
+              <i class="fa fa-trash-o fa-lg">  </i>
+            </a>
+    </td>
+  </tr>
+</table>
+
