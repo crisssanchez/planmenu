@@ -17,7 +17,7 @@ Meteor.publish('menu', function (idMenu: string) {
 });
 
 Meteor.publish('menuSemanal', function (usuario: string) {
-  return Menus.find({},{sort:{numero:-1},limit:1});
+  return Menus.find({}, { sort: { numero: -1 }, limit: 1 });
 });
 
 Meteor.publish('dietaMenu', function (idMenu: string) {
@@ -97,7 +97,7 @@ Meteor.methods({
         });
 
         //Añado los ingredientes del plato del día al carro
-        añadirAlCarro(menu, plato);
+        Meteor.call('addProductosMenuCarro',menu) ;
       }
 
       //Añado los platos al menú del día
@@ -209,14 +209,14 @@ function getNutrientesValidos(consumo: consumoNutrientes[], menuDia: Plato[], nu
     }
 
     if (consumo[i].minSemanal != null && consumo[i].maxSemanal != null) {
-      
+
       //Reparte los nutrientes que no han alcanzado su máximo semanal si son válidos
-        if (consumo[i].consumoSemanal < consumo[i].maxSemanal) {
-          if (esNutrienteValido(nutriente, consumo, menuDia, nutrientesDiaAnterior)) {
-            nutrientes.push(nutriente);
-          }
+      if (consumo[i].consumoSemanal < consumo[i].maxSemanal) {
+        if (esNutrienteValido(nutriente, consumo, menuDia, nutrientesDiaAnterior)) {
+          nutrientes.push(nutriente);
         }
       }
+    }
 
   }
 
@@ -279,11 +279,11 @@ function esNutrienteValido(nutriente: string, consumo: consumoNutrientes[], menu
   //Recojo los nutrientes que ya se han consumido AYER
   if (nutrientesAyer.length != 0) {
     for (let i = 0; i < nutrientesAyer.length; i++) {
-      if(nutrientesAyer[i] == nutriente){
+      if (nutrientesAyer[i] == nutriente) {
         return false;
       }
     }
-    
+
   }
 
   return true;
@@ -298,10 +298,10 @@ function getPlatosValidos(momento: string, tipo: string, nutrientesValidos: stri
   let nutrientesMinimosDiarios = [];
 
   //Recojo los platos de la semana
-  platosSemana = getPlatosMenu(menuActual);
+  platosSemana = getNombrePlatosMenu(menuActual);
 
   //Los nutrientes minimos se consumen de primero
-  if(nutrientesMin.length != 0 && tipo == 'PRIMERO'){
+  if (nutrientesMin.length != 0 && tipo == 'PRIMERO') {
     nutrientesValidos = nutrientesMin;
   }
 
@@ -362,7 +362,7 @@ function getPlatosValidos(momento: string, tipo: string, nutrientesValidos: stri
       tiempo: undefined, // En minutos
       tipos: undefined, // PRIMERO, SEGUNDO
       momentos: undefined, // ALMUERZO, CENA
-      nutrientes: nutrientesValidos, 
+      nutrientes: nutrientesValidos,
       temporada: undefined, // PRIMAVERA, VERANO, OTOÑO INVIERNO
       ingredientes: undefined
     });
@@ -389,7 +389,7 @@ function consumirNutrientesPlato(plato: Plato, consumo: consumoNutrientes[]): co
   return consumo;
 }
 
-function getPlatosMenu(menu: Menu): string[] {
+function getNombrePlatosMenu(menu: Menu): string[] {
 
   let platos: string[] = [];
   for (let i = 0; i < menu.dieta.length; i++) {
@@ -485,17 +485,6 @@ function getNutrientesMinimos(consumo: consumoNutrientes[]): string[] {
   }
 
   return nutrientesMin;
-}
-
-function añadirAlCarro(menu:Menu,plato:Plato){
-  for(let i = 0; i < plato.ingredientes.length; i++){
-      Productos.insert({
-        menu: menu._id,
-        nombre: plato.ingredientes[i],
-        plato: plato.nombre,
-        activo: true
-      });
-  }
 }
 
 function flat(r, a) {

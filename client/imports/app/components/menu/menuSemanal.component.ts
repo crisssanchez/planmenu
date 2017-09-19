@@ -15,22 +15,23 @@ import { Productos } from '../../../../../both/collections/productos.collection'
 import { SEMANA } from '../../data';
 
 import template from './menuSemanal.component.html';
+import { Ingrediente } from '../../../../../both/models/ingrediente.model';
 
 @Component({
-  selector:'menuSemanal',
+  selector: 'menuSemanal',
   template
 })
 
-export class MenuSemanalComponent implements OnInit, OnDestroy{
+export class MenuSemanalComponent implements OnInit, OnDestroy {
 
   dias: string[];
   dieta: Dieta[];
   menu: Menu;
   menuSub: Subscription;
-  owner:string = 'dani';
+  owner: string = 'dani';
 
 
-  ngOnInit(){
+  ngOnInit() {
     this.dias = SEMANA;
 
     if (this.menuSub) {
@@ -38,68 +39,46 @@ export class MenuSemanalComponent implements OnInit, OnDestroy{
     }
     this.menuSub = MeteorObservable.subscribe('menuSemanal', this.owner).subscribe(() => {
       MeteorObservable.autorun().subscribe(() => {
-        this.menu = Menus.findOne({owner:this.owner},{sort:{numero:-1}});
+        this.menu = Menus.findOne({ owner: this.owner }, { sort: { numero: -1 } });
         this.dieta = this.menu.dieta;
       });
     });
   }
 
-  getPlatosAlmuerzo(dia:number){
+  getPlatosAlmuerzo(dia: number) {
     return this.dieta[dia].almuerzo;
   }
 
-  getPlatosCena(dia:number){
+  getPlatosCena(dia: number) {
     return this.dieta[dia].cena;
   }
 
-  setFormatoFecha(fecha:Date){
+  setFormatoFecha(fecha: Date) {
     return `${this.dias[fecha.getUTCDay()]} ${fecha.getDate()}`;
   }
 
   getPlatosMenu(): Plato[] {
-    
-        let platos: Plato[] = [];
-        let dietaMenu: Dieta[] = this.menu.dieta;
-        for (let i = 0; i < dietaMenu.length; i++) {
-          for (let j = 0; j < dietaMenu[i].almuerzo.length; j++) {
-            platos.push(dietaMenu[i].almuerzo[j]);
-          }
-    
-          for (let j = 0; j < dietaMenu[i].cena.length; j++) {
-            platos.push(dietaMenu[i].cena[j]);
-          }
-        }
-        return platos;
-    
+
+    let platos: Plato[] = [];
+    let dietaMenu: Dieta[] = this.menu.dieta;
+    for (let i = 0; i < dietaMenu.length; i++) {
+      for (let j = 0; j < dietaMenu[i].almuerzo.length; j++) {
+        platos.push(dietaMenu[i].almuerzo[j]);
       }
 
-  addProductosMenuAlCarro(){
-
-    for(let i = 0; i < this.getPlatosMenu().length; i++){
-      
-        let plato = Productos.findOne({
-          $and: [
-            {plato: this.getPlatosMenu()[i].nombre}, 
-            {menu:this.menu._id}
-          ]});
-        if(plato == undefined){
-          for(let j = 0; j < this.getPlatosMenu()[i].ingredientes.length; j++){
-            Productos.insert({
-              menu: this.menu._id,
-              nombre: this.getPlatosMenu()[i].ingredientes[j],
-              plato: this.getPlatosMenu()[i].nombre,
-              activo: true
-            });
-          }
-          
-        }
-        
-    
-        
+      for (let j = 0; j < dietaMenu[i].cena.length; j++) {
+        platos.push(dietaMenu[i].cena[j]);
+      }
     }
+    return platos;
+
   }
 
-  ngOnDestroy(){
+  addProductosMenuCarro() {
+    MeteorObservable.call('addProductosMenuCarro', this.menu).subscribe();
+  }
+
+  ngOnDestroy() {
     this.menuSub.unsubscribe();
   }
 
