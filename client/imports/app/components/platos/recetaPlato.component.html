@@ -1,136 +1,120 @@
-
-<div class="col-xs-1"></div>
-<div *ngIf="plato" id="receta-plato" class="container col-xs-6">
+<div class="col-xs-1">
+</div>
+<div *ngIf="plato"
+  id="receta-plato"
+  class="container col-xs-6">
 
   <h2>{{plato.nombre}}</h2>
 
-  <a role="button" data-toggle="modal" (click)="staticModal.show()" style="display:inline">
+  <a role="button"
+    data-toggle="modal"
+    (click)="staticModal.show()"
+    style="display:inline">
     <i class="fa fa-pencil-square-o fa-2x"></i>
   </a>
 
 
-  <div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}"
-     tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" (click)="staticModal.hide()">
+  <div class="modal fade"
+    bsModal
+    #staticModal="bs-modal"
+    [config]="{backdrop: 'static'}"
+    tabindex="-1"
+    role="dialog">
+    <div class="modal-dialog"
+      role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button"
+            class="close"
+            (click)="staticModal.hide()">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel">Editar plato</h4>
-      </div>
-      <div class="modal-body">
+          <h4 class="modal-title"
+            id="myModalLabel">Editar plato</h4>
+        </div>
+        <div class="modal-body">
           <h4 style="color:grey;text-decoration: underline;">Nombre</h4>
           <p>{{plato.nombre}}</p>
-          <input [(ngModel)]="plato.nombre" placeholder="name" (keyup)="changePlato()"/>
+          <input [(ngModel)]="plato.nombre"
+            placeholder="name"
+            (keyup)="changePlato()" />
           <h4 style="color:grey;text-decoration: underline;">Ingredientes</h4>
-          <div *ngFor="let ing of ingredientes">
-            <p *ngIf="medidaEsUnidad(ing.medida)">
-              {{ing.cantidad}} {{ing.ingrediente}}
-            </p>
-            <p *ngIf="!medidaEsUnidad(ing.medida)">
-              {{ing.cantidad}}{{ing.medida}} {{ing.ingrediente}}
+          <div *ngFor="let ingrediente of plato.ingredientes">
+            <p>
+              {{ ingrediente }}
             </p>
           </div>
 
-          <h4 style="color:grey;text-decoration: underline;">Información Nutricional</h4>
-          <table>
-            <tr>
-              <th>Calorías</th>
-              <td>{{plato.infoNutricional.calorias}} / 100gr</td>
-            </tr>
-            <tr>
-              <th>Proteínas</th>
-              <td>{{plato.infoNutricional.proteinas}} / 100gr</td>
-            </tr>
-            <tr>
-              <th>Grasas</th>
-              <td>{{plato.infoNutricional.grasas}} / 100gr</td>
-            </tr>
-            <tr>
-              <th>Hidratos</th>
-              <td>{{plato.infoNutricional.carbohidratos}} / 100gr</td>
-            </tr>
-          </table>
 
-            <h5 style="color:grey;display:inline">Nutrientes:</h5>
-            <span class="label label-danger" *ngFor="let nut of plato.nutrientes">{{nut}}</span><br>
-            <h5 style="color:grey;display:inline">Tiempo:</h5>
-            <span class="label label-primary">{{plato.tiempo}} min</span><br>
-            <h5 style="color:grey;display:inline">Dificultad:</h5>
-            <span class="label label-success">{{plato.dificultad}}</span><br>
-            <h5 style="color:grey;display:inline">Tipo:</h5>
-            <span class="label label-warning">{{plato.tipos}}</span><br>
-            <h5 style="color:grey;display:inline">Momento:</h5>
-            <span class="label label-info">{{plato.momentos}}</span>
+
+          <h5 style="color:grey;display:inline">Nutrientes:</h5>
+          <span class="label label-danger"
+            *ngFor="let nut of plato.nutrientes">{{nut}}</span><br>
+          <h5 style="color:grey;display:inline">Tiempo:</h5>
+          <span class="label label-primary">{{plato.tiempo}} min</span><br>
+          <h5 style="color:grey;display:inline">Dificultad:</h5>
+          <span class="label label-success">{{plato.dificultad}}</span><br>
+          <h5 style="color:grey;display:inline">Tipo:</h5>
+          <span class="label label-warning">{{plato.tipos}}</span><br>
+          <h5 style="color:grey;display:inline">Momento:</h5>
+          <span class="label label-info">{{plato.momentos}}</span>
 
           <h4 style="color:grey;text-decoration: underline;">Así lo cocinamos</h4>
 
-            {{plato.descripcion}}
+          {{plato.descripcion}}
 
+        </div>
       </div>
     </div>
   </div>
-  </div>
 
 
-  <div id="imagen-plato" class="col-xs-3">
+  <div id="imagen-plato"
+    class="col-xs-7 col-sm-3">
     <div class="thumbnail">
-        <img src="images/{{plato.nombre}}.jpg" class="img-circle">
+      <img [src]="plato.imagenUrl">
     </div>
   </div>
 
-  <div id="nutrientes-plato" class="col-xs-3">
-    <h4 style="color:grey;text-decoration: underline;">Información Nutricional</h4>
-    <table>
-      <tr>
-        <th>Calorías</th>
-        <td>{{plato.infoNutricional.calorias}} / 100gr</td>
-      </tr>
-      <tr>
-        <th>Proteínas</th>
-        <td>{{plato.infoNutricional.proteinas}} / 100gr</td>
-      </tr>
-      <tr>
-        <th>Grasas</th>
-        <td>{{plato.infoNutricional.grasas}} / 100gr</td>
-      </tr>
-      <tr>
-        <th>Hidratos</th>
-        <td>{{plato.infoNutricional.carbohidratos}} / 100gr</td>
-      </tr>
-    </table>
-      <h5 style="color:grey;display:inline">Nutrientes:</h5>
-      <span class="label label-danger" *ngFor="let nut of plato.nutrientes">{{nut}}</span><br>
-      <h5 style="color:grey;display:inline">Tiempo:</h5>
-      <span class="label label-primary">{{plato.tiempo}} min</span><br>
-      <h5 style="color:grey;display:inline">Dificultad:</h5>
-      <span class="label label-success">{{plato.dificultad}}</span><br>
-      <h5 style="color:grey;display:inline">Tipo:</h5>
-      <span class="label label-warning">{{plato.tipos}}</span><br>
-      <h5 style="color:grey;display:inline">Momento:</h5>
-      <span class="label label-info">{{plato.momentos}}</span>
+  <div id="nutrientes-plato"
+    class="container row col-xs-7 col-sm-3">
+
+    <h5 style="color:grey;display:inline">Nutrientes:</h5>
+    <span class="label label-danger"
+      *ngFor="let nut of plato.nutrientes">{{nut}}</span><br>
+    <h5 style="color:grey;display:inline">Tiempo:</h5>
+    <span class="label label-primary">{{ plato.tiempo }} min</span><br>
+    <h5 style="color:grey;display:inline">Dificultad:</h5>
+    <span class="label label-success">{{ plato.dificultad }}</span><br>
+    <h5 style="color:grey;display:inline">Tipo:</h5>
+    <span class="label label-warning">{{ plato.tipos }}</span><br>
+    <h5 style="color:grey;display:inline">Momento:</h5>
+    <span class="label label-info">{{ plato.momentos }}</span>
 
   </div>
 
-  <div id="ingredientes-plato" class="col-xs-2">
-    <h4 style="color:grey;text-decoration: underline;">Ingredientes</h4>
-    <div *ngFor="let ing of ingredientes">
-      <p *ngIf="medidaEsUnidad(ing.medida)">
-        {{ing.cantidad}} {{ing.ingrediente}}
-      </p>
-      <p *ngIf="!medidaEsUnidad(ing.medida)">
-        {{ing.cantidad}}{{ing.medida}} {{ing.ingrediente}}
+  <div id="ingredientes-plato"
+    class="col-sm-7 col-md-4">
+    <div class="row">
+      <h4 style="color:grey;text-decoration: underline;">Ingredientes</h4>
+      <div *ngFor="let ingrediente of plato.ingredientes">
+        <p>
+          {{ ingrediente }}
+        </p>
+      </div>
+    </div>
+    
+  </div>
+
+  <div id="descripcion-receta"
+    class="col-sm-7 col-md-7 col-lg-4">
+    <div class="row">
+      <h4 style="color:grey;text-decoration: underline;">Así lo cocinamos</h4>
+      <p>
+        {{plato.descripcion}}
       </p>
     </div>
-  </div>
-
-  <div id="descripcion-receta" class="container col-xs-6">
-    <h4 style="color:grey;text-decoration: underline;">Así lo cocinamos</h4>
-
-      {{plato.descripcion}}
-
-
   </div>
 </div>
+
 <p *ngIf="!idPlato">No se ha encontrado receta de este plato</p>

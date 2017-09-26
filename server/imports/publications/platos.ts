@@ -8,7 +8,7 @@ import { Platos } from '../../../both/collections/platos.collection';
 import { DIFICULTAD, MOMENTO, TIPOPLATO } from '../../../client/imports/app/data';
 
 
-Meteor.publish('platos', () => Platos.find({}, {limit: 15}));
+Meteor.publish('platos', () => Platos.find({}, {limit: 100}));
 Meteor.publish('plato', function (idPlato: string) {
   return Platos.find({ _id: idPlato })
 });

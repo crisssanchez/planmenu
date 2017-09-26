@@ -29,5 +29,10 @@
   "angularCompilerOptions": {
     "genDir": "aot",
     "skipMetadataEmit": true
-  }
+  },
+  "typeAcquisition": {
+    "include": [
+        "lodash"
+    ]
+}
 }

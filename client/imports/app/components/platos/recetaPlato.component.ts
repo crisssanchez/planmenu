@@ -23,7 +23,7 @@ export class RecetaPlatoComponent implements OnInit, OnDestroy{
   paramsSub: Subscription;
   plato: Plato;
   platoSub: Subscription;
-  ingredientes:Object[];
+
 
   constructor(
      private activatedRoute: ActivatedRoute,
@@ -43,16 +43,11 @@ export class RecetaPlatoComponent implements OnInit, OnDestroy{
             this.platoSub = MeteorObservable.subscribe('plato', this.idPlato).subscribe(() => {
               MeteorObservable.autorun().subscribe(() => {
                 this.plato = Platos.findOne(this.idPlato);
-                this.ingredientes = this.plato.ingredientes;
               });
             });
         }
       });
 
-  }
-
-  medidaEsUnidad(medida: string):boolean{
-    return medida == 'UNIDAD';
   }
 
 /*
