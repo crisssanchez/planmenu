@@ -26,37 +26,40 @@ Meteor.methods({
 
     for (let i = 0; i < platosMenu.length; i++) { //Por cada plato
       let plato: Plato = platosMenu[i];
-      let ingredientes: string[] = plato.ingredientes;
+      if (platosMenu[i]._id != undefined) {
+        let ingredientes: string[] = plato.ingredientes;
 
-      for (let j = 0; j < ingredientes.length; j++) { //por cada ingrediente del plato
+        for (let j = 0; j < ingredientes.length; j++) { //por cada ingrediente del plato
 
-        let platosProducto: string[] = [];
-        if (Productos.findOne({ menu: menu._id, nombre: ingredientes[j] }) != undefined) { //Si ya está en productos actualizo el array de platos
-          platosProducto = Productos.findOne({ menu: menu._id, nombre: ingredientes[j] }).platos;
-          if(platosProducto.indexOf(plato.nombre) < 0){
+          let platosProducto: string[] = [];
+          if (Productos.findOne({ menu: menu._id, nombre: ingredientes[j] }) != undefined) { //Si ya está en productos actualizo el array de platos
+            platosProducto = Productos.findOne({ menu: menu._id, nombre: ingredientes[j] }).platos;
+            if (platosProducto.indexOf(plato.nombre) < 0) {
+              platosProducto.push(plato.nombre);
+              Productos.update({ menu: menu._id, nombre: ingredientes[j] }, { $set: { platos: platosProducto } });
+            }
+
+          } else { //Si no está en productos lo añado
             platosProducto.push(plato.nombre);
-            Productos.update({ menu: menu._id, nombre: ingredientes[j] }, { $set:{platos: platosProducto }});
+            Productos.insert({
+              menu: menu._id,
+              nombre: ingredientes[j],
+              platos: platosProducto,
+              activo: true
+            });
           }
-          
-        }else{ //Si no está en productos lo añado
-          platosProducto.push(plato.nombre);
-          Productos.insert({
-            menu: menu._id,
-            nombre: ingredientes[j],
-            platos: platosProducto,
-            activo: true
-          });
         }
       }
+
     }
   },
 
-  setActivoProductoMenu(menuId:string, producto:Producto, valor:boolean){
-    Productos.update({ menu: menuId, nombre: producto.nombre }, { $set:{activo: valor }});
+  setActivoProductoMenu(menuId: string, producto: Producto, valor: boolean) {
+    Productos.update({ menu: menuId, nombre: producto.nombre }, { $set: { activo: valor } });
   },
 
-  removeProductoMenu(menuId:string, producto:Producto){
-    Productos.remove({ menu:menuId, nombre: producto.nombre });
+  removeProductoMenu(menuId: string, producto: Producto) {
+    Productos.remove({ menu: menuId, nombre: producto.nombre });
   }
 });
 

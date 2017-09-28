@@ -92,8 +92,14 @@ Meteor.methods({
           _id: plato._id,
           nombre: plato.nombre,
           nutrientes: plato.nutrientes,
+          imagenUrl: plato.imagenUrl,
+          descripcion: plato.descripcion,
+          dificultad: plato.dificultad,
+          tiempo: plato.tiempo,
           momentos: plato.momentos,
-          tipos: plato.tipos
+          tipos: plato.tipos,
+          temporada: plato.temporada,
+          ingredientes: plato.ingredientes
         });
 
         //Añado los ingredientes del plato del día al carro
