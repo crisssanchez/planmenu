@@ -4,11 +4,12 @@ import { FormsModule }   from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap';
 import { AgmCoreModule } from '@agm/core';
 import { LOCALE_ID } from '@angular/core';
+import { AccountsModule } from 'angular2-meteor-accounts-ui';
 
 import { AppComponent } from './app.component';
 
 //Rutas
-import { APP_ROUTING } from './app.routes';
+import { APP_ROUTING, ROUTES_PROVIDERS } from './app.routes';
 
 //Servicios
 import { MapasService } from './services/mapas.service';
@@ -17,7 +18,8 @@ import { MapasService } from './services/mapas.service';
 import { MENU_DECLARATIONS } from './components/menu';
 import { PLATOS_DECLARATIONS } from './components/platos';
 import { CARRO_DECLARATIONS} from './components/carro';
-import { SHARED_DECLARATIONS } from './shared'
+import { SHARED_DECLARATIONS } from './shared';
+import { USUARIO_DECLARATIONS } from './components/usuario';
 
 
 
@@ -26,6 +28,7 @@ import { SHARED_DECLARATIONS } from './shared'
     ModalModule.forRoot(),
     BrowserModule,
     FormsModule,
+    AccountsModule,
     APP_ROUTING,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyC0-d1lcAp_4Lj4Y0laVPXg8nOTJkQNlDg',
@@ -37,11 +40,13 @@ import { SHARED_DECLARATIONS } from './shared'
     ...MENU_DECLARATIONS,
     ...PLATOS_DECLARATIONS,
     ...CARRO_DECLARATIONS,
-    ...SHARED_DECLARATIONS
+    ...SHARED_DECLARATIONS,
+    ...USUARIO_DECLARATIONS
   ],
   providers:[
     {provide: LOCALE_ID , useValue:"es"},
-    MapasService
+    MapasService,
+    ...ROUTES_PROVIDERS
   ],
   bootstrap: [
     AppComponent

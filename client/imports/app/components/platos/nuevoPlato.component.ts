@@ -137,6 +137,10 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
   }
 
   guardarPlato() {
+    if(!Meteor.userId()){
+      alert('Inicie sesión para poder añadir un plato');
+      return;
+    }
     let plato: Plato = {
       nombre: '',
       nutrientes: []

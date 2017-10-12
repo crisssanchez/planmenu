@@ -1,20 +1,31 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container barra col-lg-7">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+      <button type="button"
+        class="navbar-toggle collapsed"
+        data-toggle="collapse"
+        data-target="#bs-example-navbar-collapse-1"
+        aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" [routerLink]="['menuSemanal']">La nevera de mamá</a>
+      <a class="navbar-brand"
+        [routerLink]="['menuSemanal']">La nevera de mamá</a>
     </div>
-    <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
+    <div class="collapse navbar-collapse pull-right"
+      id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li routerLinkActive ="active"><a [routerLink] ="['menuSemanal']">Menú</a></li>
-        <li routerLinkActive ="active"><a [routerLink] ="['menus']">Menús</a></li>
-        <li routerLinkActive ="active"><a [routerLink]="['platos']">Platos</a></li>
-        <li routerLinkActive ="active"><a [routerLink]="['carro']">Carro</a></li>
+        <li *ngIf="user"
+          routerLinkActive="active"><a [routerLink]="['menuSemanal']">Menú</a></li>
+        <li *ngIf="user"
+          routerLinkActive="active"><a [routerLink]="['menus']">Menús</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['platos']">Platos</a></li>
+        <li *ngIf="user"
+          routerLinkActive="active"><a [routerLink]="['carro']">Carro</a></li>
+        <li *ngIf="user"
+          routerLinkActive="active"><a [routerLink]="['usuario']">Usuario</a></li>
       </ul>
     </div>
   </div>
@@ -23,3 +34,9 @@
 
 <!--CABECERA TITULAR-->
 <div class="container page-header"></div>
+<div class="container"
+  style="float:right;margin-right:15px;">
+  <div class="row pull-right">
+    <login-buttons></login-buttons>
+  </div>
+</div>

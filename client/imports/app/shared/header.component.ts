@@ -1,9 +1,14 @@
 import { Component } from '@angular/core';
-
 import template from './header.component.html';
+import { InjectUser } from 'angular2-meteor-accounts-ui';
+import { Meteor } from 'meteor/meteor';
 
 @Component({
   selector: 'app-header',
   template
 })
-export class HeaderComponent{}
+@InjectUser('user')
+export class HeaderComponent{
+
+  user: Meteor.User;
+}

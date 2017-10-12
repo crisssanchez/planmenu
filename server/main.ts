@@ -5,6 +5,7 @@ import './imports/publications/menus';
 import './imports/publications/ingredientes';
 import './imports/publications/productos';
 import './imports/publications/nutrientes';
+import './imports/publications/familias';
 
 Meteor.startup(() => {
 

@@ -1,9 +1,19 @@
 import { MongoObservable } from 'meteor-rxjs';
 import { Mongo } from 'meteor/mongo';
-
 import { Nutriente } from '../models/nutriente.model';
+import { Meteor } from 'meteor/meteor';
 
 export const Nutrientes = new MongoObservable.Collection<Nutriente>('nutrientes');
+
+function loggedIn(){
+  return !!Meteor.user();
+}
+
+Nutrientes.allow({
+  insert: loggedIn,
+  update: loggedIn,
+  remove: loggedIn
+});
 
 export function sort( a:Nutriente, b:Nutriente ){
   if(( a.minDia != null ) && ( b.minDia != null ) && ( a.minDia > b.minDia )){

@@ -2,10 +2,10 @@
   <div class="page-header">
     <div class="titulo col-xs-5">
       <h4>Listado de platos</h4>
-      <button type="button"
+      <!--<button type="button"
         name="button"
         class="btn btn-success"
-        (click)="generarPlatos()">Generar</button>
+        (click)="generarPlatos()">Generar</button>-->
     </div>
 
     <div class="input-group br col-xs-2">
@@ -21,7 +21,7 @@
                 <span class="fa fa-search" style="color:white;"></span>
       </button>
       </span>
-      <span class="input-group-btn">
+      <span class="input-group-btn" *ngIf="user">
                   <a [routerLink]="['/nuevoPlato']" class="btn btn-success">
                     <span class="fa fa-plus" style="color:white;"></span>
       </a>

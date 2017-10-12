@@ -4,6 +4,8 @@ import { MeteorObservable } from 'meteor-rxjs'
 import { Mongo } from 'meteor/mongo';
 import { Subscription } from 'rxjs/Subscription';
 import { Router } from '@angular/router';
+import { InjectUser } from 'angular2-meteor-accounts-ui';
+import { Meteor } from 'meteor/meteor';
 
 import { Plato } from '../../../../../both/models/plato.model';
 import { Platos } from '../../../../../both/collections/platos.collection';
@@ -18,9 +20,9 @@ import template from './platos.component.html';
   selector:'platos',
   template
 })
-
+@InjectUser('user')
 export class PlatosComponent implements OnInit, OnDestroy{
-
+  user: Meteor.User;
   platos: Observable<Plato[]>;
   platosSub: Subscription;
 

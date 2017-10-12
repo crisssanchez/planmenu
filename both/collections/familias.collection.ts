@@ -1,14 +1,14 @@
 import { MongoObservable } from 'meteor-rxjs';
-import { Producto } from '../models/producto.model';
+import { Familia } from '../models/familia.model';
 import { Meteor } from 'meteor/meteor';
 
-export const Productos = new MongoObservable.Collection<Producto>('productos');
+export const Familias = new MongoObservable.Collection<Familia>('familias');
 
 function loggedIn(){
   return !!Meteor.user();
 }
 
-Productos.allow({
+Familias.allow({
   insert: loggedIn,
   update: loggedIn,
   remove: loggedIn
