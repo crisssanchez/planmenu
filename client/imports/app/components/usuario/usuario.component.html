@@ -1,8 +1,48 @@
 <div class="jumbotron">
-  <div class="container">
+  <div *ngIf="usuario"
+    class="container">
+
     <form action="actualizarUsuario()"
       class="form-horizontal">
       <div class="row">
+
+        <div class="col-lg-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Datos personales</h3>
+            </div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label class="col-xs-2">Nombre:</label>
+                <div class="col-xs-5">
+                  <input style="width:80%;"
+                    [(ngModel)]="usuario.nombre"
+                    name="nombre">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-2">Apellidos Familia:</label>
+                <div class="col-xs-5">
+                  <input type="text"
+                    style="width:80%;"
+                    name="apellidos"
+                    [(ngModel)]="usuario.apellidos">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-2">Nº personas</label>
+                <div class="col-xs-5">
+                  <input type="text"
+                    style="width:10%;"
+                    name="miembros"
+                    [(ngModel)]="usuario.miembros">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="col-lg-3">
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -13,53 +53,22 @@
                 <label class="col-xs-2">Email:</label>
                 <div class="col-xs-5">
                   <input type="text"
+                    style="width:80%;"
                     name="email"
                     id="email"
                     [(ngModel)]="usuario.email"
                     placeholder="Email">
                 </div>
               </div>
-              <div class="form-group">
+              <div hidden
+                class="form-group">
                 <label class="col-xs-2">Password:</label>
                 <div class="col-xs-5">
                   <input type="text"
                     name="password"
                     id="password"
-                    [(ngModel)]="password"
+                    [(ngModel)]="usuario.password"
                     placeholder="Password">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Datos personales</h3>
-            </div>
-            <div class="panel-body">
-              <div class="form-group">
-                <label class="col-xs-2">Nombre:</label>
-                <div *ngIf="usuario" class="col-xs-5">
-                  <input
-                    [(ngModel)]="usuario.nombre" name="nombre">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-xs-2">Apellidos Familia:</label>
-                <div *ngIf="usuario" class="col-xs-5">
-                  <input type="text"
-                    name="apellidos"
-                    [(ngModel)]="usuario.apellidos">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-xs-2">Nº personas</label>
-                <div *ngIf="usuario" class="col-xs-5">
-                  <input type="text"
-                    name="miembros"
-                    [(ngModel)]="usuario.miembros">
                 </div>
               </div>
             </div>
@@ -76,8 +85,8 @@
             <label class="col-xs-2">Nuevo menú:</label>
             <div class="col-xs-5">
               <select class="selectpicker"
-                name="comienzaMenu"
-                [(ngModel)]="comienzaMenu">
+                name="comienzo"
+                [(ngModel)]="usuario.comienzo">
                     <option>Lunes</option>
                     <option>Martes</option>
                     <option>Miércoles</option>
@@ -93,7 +102,7 @@
             <div class="col-xs-5">
               <select class="selectpicker"
                 name="dificultad"
-                [(ngModel)]="dificultad"> 
+                [(ngModel)]="usuario.dificultad"> 
                       <option>Baja</option>
                       <option>Media</option>
                       <option>Alta</option>
@@ -104,9 +113,10 @@
             <label class="col-xs-2">Tiempo elaboración platos:</label>
             <div class="col-xs-5">
               <input type="text"
+                style="width:10%;"
                 name="tiempo"
                 id="tiempo"
-                [(ngModel)]="tiempo">
+                [(ngModel)]="usuario.tiempo">
             </div>
           </div>
 
@@ -131,10 +141,16 @@
                     role="group"
                     aria-label="...">
                     <button type="button"
+                      (click)="cambiarGustos(nutriente._id, 1)"
+                      [class.active]="gustoNutriente(nutriente._id, 1)"
                       class="btn btn-default"><i class="fa fa-heart-o" aria-hidden="true"></i></button>
                     <button type="button"
+                      (click)="cambiarGustos(nutriente._id,0)"
+                      [class.active]="gustoNutriente(nutriente._id, 0)"
                       class="btn btn-default"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button>
                     <button type="button"
+                      (click)="cambiarGustos(nutriente._id,-1)"
+                      [class.active]="gustoNutriente(nutriente._id, -1)"
                       class="btn btn-default"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>
                   </div>
                 </div>
@@ -150,6 +166,7 @@
       </div>
 
       <button type="submit"
+        (click)="guardarUsuario()"
         class="btn btn-danger">Guardar</button>
 
     </form>

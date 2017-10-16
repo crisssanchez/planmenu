@@ -9,11 +9,12 @@ import { CarroComponent } from './components/carro/carro.component';
 
 import { Meteor } from 'meteor/meteor';
 import { UsuarioComponent } from './components/usuario/usuario.component';
+import { FamiliaResolve } from './services/familia-resolve.service';
 
 const APP_ROUTES: Routes = [
   { path: '', component: MenuSemanalComponent },
   { path: 'usuario', component: UsuarioComponent, canActivate:['canActivateForLoggedIn']},
-  { path: 'menuSemanal', component: MenuSemanalComponent, canActivate:['canActivateForLoggedIn'] },
+  { path: 'menuSemanal', component: MenuSemanalComponent, canActivate:['canActivateForLoggedIn'], resolve: { fam: FamiliaResolve } },
   { path: 'menu/:_id', component: MenuComponent, canActivate:['canActivateForLoggedIn'] },
   { path: 'menus', component: MenusComponent, canActivate:['canActivateForLoggedIn'] },
   { path: 'recetaPlato', component: RecetaPlatoComponent },

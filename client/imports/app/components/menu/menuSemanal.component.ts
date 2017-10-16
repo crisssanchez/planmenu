@@ -1,3 +1,5 @@
+import { Familia } from '../../../../../both/models/familia.model';
+import { Familias } from '../../../../../both/collections/familias.collection';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { MeteorObservable } from 'meteor-rxjs'
@@ -16,19 +18,25 @@ import { SEMANA } from '../../data';
 
 import template from './menuSemanal.component.html';
 import { Ingrediente } from '../../../../../both/models/ingrediente.model';
+import { InjectUser } from 'angular2-meteor-accounts-ui';
+import { Meteor } from 'meteor/meteor';
+import { FamiliaService } from '../../services/familia.service';
 
 @Component({
   selector: 'menuSemanal',
   template
 })
-
+@InjectUser('user')
 export class MenuSemanalComponent implements OnInit, OnDestroy {
 
+  user: Meteor.User;
   dias: string[];
   dieta: Dieta[];
   menu: Menu;
   menuSub: Subscription;
   owner: string = 'dani';
+
+  constructor(private fs: FamiliaService) { }
 
 
   ngOnInit() {
@@ -72,6 +80,30 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
     }
     return platos;
 
+  }
+
+  setGustoPlato(plato:Plato, valor:number){
+    MeteorObservable.call('setGustoPlato', plato, valor).subscribe();
+  }
+
+  esGustoPlato(plato:Plato, valor: number){
+    let gustosPlatos: any[] = this.fs.familia.gustos_platos;
+    
+        if(gustosPlatos != undefined){
+    
+          for(let i = 0; i < gustosPlatos.length; i++){
+            if(gustosPlatos[i].id_plato === plato._id){
+              if(gustosPlatos[i].valor === valor){
+                return true;
+              }else{
+                return false;
+              }
+            }
+          }
+    
+        }else{
+          return false;
+        }
   }
 
   addProductosMenuCarro() {

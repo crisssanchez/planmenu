@@ -20,6 +20,7 @@ import { PLATOS_DECLARATIONS } from './components/platos';
 import { CARRO_DECLARATIONS} from './components/carro';
 import { SHARED_DECLARATIONS } from './shared';
 import { USUARIO_DECLARATIONS } from './components/usuario';
+import { FamiliaService } from './services/familia.service';
 
 
 
@@ -46,6 +47,7 @@ import { USUARIO_DECLARATIONS } from './components/usuario';
   providers:[
     {provide: LOCALE_ID , useValue:"es"},
     MapasService,
+    FamiliaService,
     ...ROUTES_PROVIDERS
   ],
   bootstrap: [
