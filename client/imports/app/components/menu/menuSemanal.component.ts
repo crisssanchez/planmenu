@@ -35,13 +35,26 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
   menu: Menu;
   menuSub: Subscription;
   owner: string = 'dani';
+  alternativas: Plato[]=[];
+  motivo: number;
+  platoACambiar: Plato;
+  diaCambio: number;
+  momentoCambio: string;
+  platoSeleccionado: Plato ={
+    _id: undefined,
+    nombre: undefined,
+    imagenUrl:undefined,
+    nutrientes:undefined
+  };
+  motivoIngredientes: string[] = [];
 
-  constructor(private fs: FamiliaService) { }
-
-
+  constructor(private fs: FamiliaService) {
+  }
+  
+  
   ngOnInit() {
     this.dias = SEMANA;
-
+    
     if (this.menuSub) {
       this.menuSub.unsubscribe();
     }
@@ -51,6 +64,8 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
         this.dieta = this.menu.dieta;
       });
     });
+
+    this.setPlatos();
   }
 
   getPlatosAlmuerzo(dia: number) {
@@ -106,9 +121,73 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
         }
   }
 
+  setPlatos(){
+    this.alternativas.push({
+      _id:"PRUEBA",
+      nombre:"Hamburguesa de ternera al horno con tomate aliñado",
+      imagenUrl: "https://goo.gl/zHfJV9",
+      nutrientes:["LACTEO"]
+    });
+
+    this.alternativas.push({
+      _id:"PRUEBA2",
+      nombre:"Arroz con tomate y merluza a la plancha",
+      imagenUrl: "https://goo.gl/zHfJV9",
+      nutrientes:["LACTEO"]
+    });
+
+    this.alternativas.push({
+      _id:"PRUEBA3",
+      nombre:"Macarrones boloñesa",
+      imagenUrl: "https://goo.gl/zHfJV9",
+      nutrientes:["LACTEO"]
+    });
+  }
+
+  setPlatoACambiar(dia: number, momento: string, plato: Plato){
+    this.diaCambio = dia;
+    this.momentoCambio = momento;
+    this.platoACambiar = {
+      _id:plato._id,
+      nombre: plato.nombre,
+      imagenUrl: plato.imagenUrl,
+      nutrientes: plato.nutrientes
+    }
+  }
+
+  setMotivo(motivo:number){
+    this.motivo = motivo;
+  }
+
+  esMotivo(motivo:number){
+    return (this.motivo=== motivo);
+  }
+
+
+  setPlatoSeleccionado(pAlternativo:Plato){
+    this.platoSeleccionado._id = pAlternativo._id;
+    this.platoSeleccionado.nombre = pAlternativo.nombre;
+    this.platoSeleccionado.imagenUrl = pAlternativo.imagenUrl;
+    this.platoSeleccionado.nutrientes = pAlternativo.nutrientes;
+  }
+
+  esPlatoSeleccionado(pAlternativo: Plato){
+    if(!this.platoSeleccionado._id){
+      return false;
+    }
+    return (this.platoSeleccionado._id === pAlternativo._id);
+  }
+
+  guardarCambioPlato(dia:number, momento:string,p:Plato){
+    this.setPlatoACambiar(dia,momento, p);
+    MeteorObservable.call('cambiarPlatoMenu', this.menu, this.platoACambiar, this.diaCambio,this.momentoCambio, this.platoSeleccionado, this.motivo, this.motivoIngredientes).subscribe(()=>{});
+  }
+
   addProductosMenuCarro() {
     MeteorObservable.call('addProductosMenuCarro', this.menu).subscribe();
   }
+
+  
 
   ngOnDestroy() {
     this.menuSub.unsubscribe();

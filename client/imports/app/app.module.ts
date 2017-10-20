@@ -1,3 +1,4 @@
+import { FamiliaResolve } from './services/familia-resolve.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
@@ -48,6 +49,7 @@ import { FamiliaService } from './services/familia.service';
     {provide: LOCALE_ID , useValue:"es"},
     MapasService,
     FamiliaService,
+    FamiliaResolve,
     ...ROUTES_PROVIDERS
   ],
   bootstrap: [

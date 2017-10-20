@@ -38,11 +38,6 @@ a.cabecera{
   color: grey;
 }
 
-.momento-dia{
-  -webkit-transform: rotate(-90deg);
-  -moz-transform: rotate(-90deg);
-}
-
 .thumbnail{
   //border:none;
   padding: 0;
@@ -50,13 +45,6 @@ a.cabecera{
   background-color: white;
 }
 
-.thumbnail.par{
-  background-color: @gray-lighter;
-}
-
-.thumbnail.impar{
-  background-color: @gray-lighter;
-}
 
 .thumbnail.hoy{
   background-color: @brand-info;
@@ -102,7 +90,9 @@ button{
   color:grey;
   border:none;
 }
-
+.thumbnail.active{
+  background-color:#e6e6e6;
+}
 table{
   margin-bottom: 15px;
 }
@@ -132,4 +122,8 @@ agm-map {
 .login-buttons{
   position: relative;
   top: -20px;
+}
+
+.modal-dialog{
+  height: 800px !important;
 }

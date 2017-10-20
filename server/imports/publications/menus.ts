@@ -35,6 +35,18 @@ interface consumoNutrientes {
 
 Meteor.methods({
 
+  cambiarPlatoMenu(menu: Menu, platoOrigen: Plato, dia: number, momento: string, platoDestino: Plato, motivoCambio: number, ingredientesMotivo: string[]) {
+
+    let posField = 'dieta.' + dia + '.' + momento;
+    let pushValue = {};
+    pushValue[posField] = platoDestino;
+
+    let popValue = {};
+    popValue[posField] = { _id: platoOrigen._id };
+    Menus.update({ _id: menu._id, ['dieta.' + dia + '.' + momento + '._id']: platoOrigen._id }, { $set: { ['dieta.' + dia + '.' + momento + '.$']: platoDestino } });
+
+  },
+
   generarMenuSemana() {
 
     let menu: Menu = {
@@ -103,7 +115,7 @@ Meteor.methods({
         });
 
         //Añado los ingredientes del plato del día al carro
-        Meteor.call('addProductosMenuCarro',menu) ;
+        Meteor.call('addProductosMenuCarro', menu);
       }
 
       //Añado los platos al menú del día
