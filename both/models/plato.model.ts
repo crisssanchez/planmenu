@@ -11,7 +11,7 @@ export interface Plato extends CollectionObject{
   momentos?: string[]; // ALMUERZO, CENA
   nutrientes: string[]; // De la base de datos
   temporada?: string[]; // PRIMAVERA, VERANO, OTOÑO INVIERNO
-  ingredientes?: string[];
+  ingredientes: string[];
   infoNutricional?: { 
     calorias?: number;
     proteinas: number,

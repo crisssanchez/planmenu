@@ -8,7 +8,7 @@ import { Platos } from '../../../both/collections/platos.collection';
 import { DIFICULTAD, MOMENTO, TIPOPLATO } from '../../../client/imports/app/data';
 
 
-Meteor.publish('platos', () => Platos.find({}, {limit: 100}));
+Meteor.publish('platos', () => Platos.find({}, { limit: 100 }));
 Meteor.publish('plato', function (idPlato: string) {
   return Platos.find({ _id: idPlato })
 });
@@ -31,6 +31,29 @@ Meteor.methods({
         ingredientes: getIngredientesAleatorios()
       });
     }
+  },
+
+  getPlatosAlternativos(p: Plato) {
+    let platosAlternativos: Plato[] = [];
+    let alternativas: Plato[] = [];
+
+    alternativas = Platos.find({
+      _id: {
+        $ne:p._id
+      },
+      nutrientes: {
+        $all:p.nutrientes
+
+      }
+    }).fetch();
+
+    for (let i = 0; i < 3; i++) {
+      let p = getAleatorio(alternativas);
+      platosAlternativos.push(p);
+      alternativas.splice(alternativas.indexOf(p),1);
+    }
+
+    return platosAlternativos;
   }
 });
 
@@ -93,7 +116,7 @@ function getMedidaIngrediente(): any {
   return getAleatorio(medida);
 }
 
-function getIngredientesAleatorios():string[] {
+function getIngredientesAleatorios(): string[] {
   let ingredientes: any[] = [];
   let num = getNumAleatorio(1, 5);
   for (let i = 0; i < num; i++) {

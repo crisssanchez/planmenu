@@ -44,9 +44,11 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
     _id: undefined,
     nombre: undefined,
     imagenUrl:undefined,
-    nutrientes:undefined
+    nutrientes:undefined,
+    ingredientes:undefined
   };
-  motivoIngredientes: string[] = [];
+  motivoIngredientes: Ingrediente[] = [];
+  show: boolean = false;
 
   constructor(private fs: FamiliaService) {
   }
@@ -65,7 +67,7 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.setPlatos();
+  
   }
 
   getPlatosAlmuerzo(dia: number) {
@@ -121,27 +123,39 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
         }
   }
 
-  setPlatos(){
-    this.alternativas.push({
-      _id:"PRUEBA",
-      nombre:"Hamburguesa de ternera al horno con tomate aliñado",
-      imagenUrl: "https://goo.gl/zHfJV9",
-      nutrientes:["LACTEO"]
-    });
+  getPlatosAlternativos(p:Plato){
+    MeteorObservable.call('getPlatosAlternativos', p).subscribe(
+      (result: Plato[]) => {
+        for(let i = 0; i< result.length; i++){
+          this.alternativas.push({
+            _id:result[i]._id,
+            nombre: result[i].nombre,
+            imagenUrl:result[i].imagenUrl,
+            nutrientes:result[i].nutrientes,
+            ingredientes: result[i].ingredientes
+          });
+        }
 
-    this.alternativas.push({
-      _id:"PRUEBA2",
-      nombre:"Arroz con tomate y merluza a la plancha",
-      imagenUrl: "https://goo.gl/zHfJV9",
-      nutrientes:["LACTEO"]
-    });
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
 
-    this.alternativas.push({
-      _id:"PRUEBA3",
-      nombre:"Macarrones boloñesa",
-      imagenUrl: "https://goo.gl/zHfJV9",
-      nutrientes:["LACTEO"]
-    });
+  clearDialog(){
+    this.alternativas = [];
+    this.show = false;
+    this.setMotivo(2);
+    let p: Plato = {
+      _id: undefined,
+      nombre: undefined,
+      imagenUrl:undefined,
+      nutrientes:undefined,
+      ingredientes:undefined
+    };
+    this.setPlatoSeleccionado(p);
+    this.motivoIngredientes = [];
   }
 
   setPlatoACambiar(dia: number, momento: string, plato: Plato){
@@ -151,7 +165,8 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
       _id:plato._id,
       nombre: plato.nombre,
       imagenUrl: plato.imagenUrl,
-      nutrientes: plato.nutrientes
+      nutrientes: plato.nutrientes,
+      ingredientes: plato.ingredientes
     }
   }
 
@@ -162,7 +177,6 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
   esMotivo(motivo:number){
     return (this.motivo=== motivo);
   }
-
 
   setPlatoSeleccionado(pAlternativo:Plato){
     this.platoSeleccionado._id = pAlternativo._id;
@@ -180,14 +194,27 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
 
   guardarCambioPlato(dia:number, momento:string,p:Plato){
     this.setPlatoACambiar(dia,momento, p);
-    MeteorObservable.call('cambiarPlatoMenu', this.menu, this.platoACambiar, this.diaCambio,this.momentoCambio, this.platoSeleccionado, this.motivo, this.motivoIngredientes).subscribe(()=>{});
+    MeteorObservable.call('cambiarPlatoMenu', this.menu, this.platoACambiar, this.diaCambio,this.momentoCambio, this.platoSeleccionado, this.motivo, this.motivoIngredientes).subscribe();
+    this.clearDialog();
+  }
+
+  setMotivoIngredientes(ing:Ingrediente){
+    let esta = false;
+    for(let i = 0; i< this.motivoIngredientes.length; i++){
+      if(this.motivoIngredientes[i]._id === ing._id){
+        this.motivoIngredientes.splice(this.motivoIngredientes.indexOf(ing),1);
+        esta = true;
+      }
+    }
+    if (!esta){
+      this.motivoIngredientes.push(ing);
+    }
+    
   }
 
   addProductosMenuCarro() {
     MeteorObservable.call('addProductosMenuCarro', this.menu).subscribe();
   }
-
-  
 
   ngOnDestroy() {
     this.menuSub.unsubscribe();

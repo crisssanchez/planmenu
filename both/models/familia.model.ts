@@ -30,8 +30,8 @@ export interface Familia extends CollectionObject {
     id_destino: string,
     nombre_destino: string,
     motivo_cambio: {
-      motivo: string,
-      id_especifico?: string
+      motivo: number,
+      ingredientes?: string[]
     }
   }[];
 

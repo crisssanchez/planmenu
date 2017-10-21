@@ -143,7 +143,7 @@
 
                 <a class="btn btn-default btn-xs pull-right"
                   data-toggle="modal"
-                  (click)="cambiarPlatoModal.show()"
+                  (click)="cambiarPlatoModal.show();getPlatosAlternativos(p)"
                   role="button">
                   <i class="fa fa-retweet"></i>
                 </a>
@@ -160,7 +160,7 @@
                       <div class="modal-header">
                         <button type="button"
                           class="close"
-                          (click)="cambiarPlatoModal.hide()">
+                          (click)="cambiarPlatoModal.hide();clearDialog();">
                           <span aria-hidden="true">&times;</span>
                         </button>
                         <h4 class="modal-title"
@@ -175,14 +175,25 @@
                         <div class="btn-group">
 
                           <button type="button"
-                            class="btn btn-default" (click)="setMotivo(1)" [class.active]= "esMotivo(1)" >No me apetece</button>
+                            class="btn btn-default" (click)="setMotivo(1);show = false;" [class.active]= "esMotivo(1)" >No me apetece</button>
 
                           <button type="button"
-                            class="btn btn-default" (click)="setMotivo(-1)" [class.active]="esMotivo(-1)">No me gusta el plato</button>
+                            class="btn btn-default" (click)="setMotivo(-1);show = false;" [class.active]="esMotivo(-1)">No me gusta el plato</button>
 
                           <button type="button"
-                            class="btn btn-default" (click)="setMotivo(0)" [class.active]="esMotivo(0)">No me gusta alguno de los ingredientes</button>
+                            class="btn btn-default" (click)="setMotivo(0);show = true;" [class.active]="esMotivo(0)">No me gusta alguno de los ingredientes</button>
+                           
 
+                        </div>
+
+                        <div *ngIf="show">
+                          <h5>Ingredientes:</h5>
+                          <div class="btn-group" *ngFor="let ing of p.ingredientes">
+
+                            <label for="default" class="btn btn-default" >{{ing.nombre}} <input type="checkbox" id="default" class="badgebox" (change)="setMotivoIngredientes(ing)"></label>
+                          </div>
+
+                       
                         </div>
 
                         <h5>Alternativas:</h5>
@@ -194,7 +205,7 @@
                               <div class="caption">
                                 <div style="height: 200px; width:210px; background-position: center; background-size: cover;"
                                   [style.backgroundImage]="'url(' + pAlternativo.imagenUrl + ')'"></div>
-                                {{pAlternativo.nombre}}
+                                {{ pAlternativo.nombre }}
                               </div>
                             </button>
                           </div>

@@ -143,7 +143,8 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
     }
     let plato: Plato = {
       nombre: '',
-      nutrientes: []
+      nutrientes: [],
+      ingredientes: []
     };
 
     plato.nombre = this.nombre;

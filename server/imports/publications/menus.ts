@@ -1,3 +1,4 @@
+import { Familias } from '../../../both/collections/familias.collection';
 import { factoryOrValue } from 'rxjs/operator/multicast';
 import { Meteor } from 'meteor/meteor';
 import { Menus } from '../../../both/collections/menus.collection';
@@ -43,7 +44,32 @@ Meteor.methods({
 
     let popValue = {};
     popValue[posField] = { _id: platoOrigen._id };
-    Menus.update({ _id: menu._id, ['dieta.' + dia + '.' + momento + '._id']: platoOrigen._id }, { $set: { ['dieta.' + dia + '.' + momento + '.$']: platoDestino } });
+    Menus.update({ _id: menu._id, ['dieta.' + dia + '.' + momento + '._id']: platoOrigen._id },
+      {
+        $set: {
+          ['dieta.' + dia + '.' + momento + '.$']: platoDestino
+        }
+      });
+
+    Familias.update(
+      { _id: Meteor.userId },
+      {
+        $addToSet: {
+          cambios_platos: { id_origen: platoOrigen._id, nombre_origen: platoOrigen.nombre, id_destino: platoDestino._id, nombre_destino: platoDestino.nombre, motivo_cambio: { motivo: motivoCambio, ingredientes: ingredientesMotivo } }
+        }
+      });
+
+      if(motivoCambio == -1){
+        Familias.update(
+          { _id: Meteor.userId },
+          {
+            $addToSet: {
+              gustos_platos: { id_plato: platoOrigen._id, nombre_plato: platoOrigen.nombre, valor: motivoCambio }
+            }
+          });
+        
+      }
+
 
   },
 
