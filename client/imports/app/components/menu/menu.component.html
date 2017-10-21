@@ -7,7 +7,8 @@
         class="btn btn-success"
         (click)="generarMenu()">Generar</button>
     </div>
-    <br><br>
+    <br>
+    <br>
   </div>
 </div>
 
@@ -21,16 +22,28 @@
       <ul class="list-group">
         <li class="list-group-item"
           *ngFor="let plato of dia.almuerzo">
-          <div>{{ plato.nombre }}</div>
-          <div class="label"
-            *ngFor="let nutriente of plato.nutrientes"
-            [style.backgroundColor]="bgColor(nutriente)">
-            {{ nutriente }}
+
+          <div *ngIf="plato.nombre == undefined">
+            <h4>?</h4>
+            <div class="label"
+              *ngFor="let nutriente of plato.nutrientes"
+              [style.backgroundColor]="bgColor(nutriente)">
+              {{ nutriente }}
+            </div>
           </div>
-          <span class="label"
-            style="background-color:white;color:black">{{plato.tipos}}</span>
-          <span class="label"
-            style="background-color:white;color:black">{{plato.momentos}}</span>
+
+          <div *ngIf="plato.nombre != undefined">
+            <div>{{ plato.nombre }}</div>
+            <div class="label"
+              *ngFor="let nutriente of plato.nutrientes"
+              [style.backgroundColor]="bgColor(nutriente)">
+              {{ nutriente }}
+            </div>
+            <span class="label"
+              style="background-color:white;color:black">{{plato.tipos}}</span>
+            <span class="label"
+              style="background-color:white;color:black">{{plato.momentos}}</span>
+          </div>
         </li>
       </ul>
       <h4>Cena</h4>

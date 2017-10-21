@@ -216,6 +216,7 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
     MeteorObservable.call('addProductosMenuCarro', this.menu).subscribe();
   }
 
+
   ngOnDestroy() {
     this.menuSub.unsubscribe();
   }

@@ -66,55 +66,101 @@
                 <h5>{{p.nombre}}</h5>
 
                 <a class="btn btn-default btn-xs pull-right"
-                  data-toggle="modal"
-                  (click)="cambiarPlatoModal.show()"
-                  role="button">
-                  <i class="fa fa-retweet"></i>
-                </a>
-                <div class="modal fade"
-                  bsModal
-                  #cambiarPlatoModal="bs-modal"
-                  [config]="{backdrop: 'static'}"
-                  tabindex="-1"
-                  role="dialog">
-                  <div class="modal-dialog modal-lg"
-                    role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
+                data-toggle="modal"
+                (click)="cambiarPlatoModal.show();getPlatosAlternativos(p)"
+                role="button">
+                <i class="fa fa-retweet"></i>
+              </a>
+
+
+              <div class="modal fade"
+                bsModal
+                #cambiarPlatoModal="bs-modal"
+                tabindex="-1"
+                role="dialog">
+                <div class="modal-dialog modal-lg"
+                  role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button"
+                        class="close"
+                        (click)="cambiarPlatoModal.hide();clearDialog();">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <h4 class="modal-title"
+                        id="myModalLabel">Cambiar plato</h4>
+                    </div>
+                    <div class="modal-body">
+
+                      <h5 style="display:inline;">Plato: </h5> {{p.nombre}}
+
+                      <h5>Motivo:</h5>
+
+                      <div class="btn-group">
+
                         <button type="button"
-                          class="close"
-                          (click)="cambiarPlatoModal.hide()">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title"
-                          id="myModalLabel">Cambiar plato</h4>
-                      </div>
-                      <div class="modal-body">
-                        <p>{{p.nombre}}</p>
+                          class="btn btn-default" (click)="setMotivo(1);show = false;" [class.active]= "esMotivo(1)" >No me apetece</button>
 
+                        <button type="button"
+                          class="btn btn-default" (click)="setMotivo(-1);show = false;" [class.active]="esMotivo(-1)">No me gusta el plato</button>
+
+                        <button type="button"
+                          class="btn btn-default" (click)="setMotivo(0);show = true;" [class.active]="esMotivo(0)">No me gusta alguno de los ingredientes</button>
+                         
 
                       </div>
+
+                      <div *ngIf="show">
+                        <h5>Ingredientes:</h5>
+                        <div class="btn-group" *ngFor="let ing of p.ingredientes">
+
+                          <label for="default" class="btn btn-default" >{{ing.nombre}} <input type="checkbox" id="default" class="badgebox" (change)="setMotivoIngredientes(ing)"></label>
+                        </div>
+
+                     
+                      </div>
+
+                      <h5>Alternativas:</h5>
+
+                      <div class="row">
+                        <div class="col-md-2"
+                          *ngFor="let pAlternativo of alternativas">
+                          <button class="thumbnail" (click)="setPlatoSeleccionado(pAlternativo)" [class.active]="esPlatoSeleccionado(pAlternativo)" role="button">
+                            <div class="caption">
+                              <div style="height: 200px; width:210px; background-position: center; background-size: cover;"
+                                [style.backgroundImage]="'url(' + pAlternativo.imagenUrl + ')'"></div>
+                              {{ pAlternativo.nombre }}
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button"
+                        class="btn btn-danger" (click)="guardarCambioPlato(dia, 'almuerzo', p)">Guardar</button>
                     </div>
                   </div>
                 </div>
-                <a class="btn btn-default btn-xs"
-                  (click)="setGustoPlato(p,1)"
-                  [class.active]="esGustoPlato(p,1)"
-                  role="button">
-                  <i class="fa fa-heart-o"></i>
-                </a>
-                <a class="btn btn-default btn-xs"
-                  (click)="setGustoPlato(p,0)"
-                  [class.active]="esGustoPlato(p,0)"
-                  role="button">
-                  <i class="fa fa-thumbs-o-up"></i>
-                </a>
-                <a class="btn btn-default btn-xs"
-                  (click)="setGustoPlato(p,-1)"
-                  [class.active]="esGustoPlato(p,-1)"
-                  role="button">
-                  <i class="fa fa-thumbs-o-down"></i>
-                </a>
+              </div>
+              <a class="btn btn-default btn-xs"
+                (click)="setGustoPlato(p,1)"
+                [class.active]="esGustoPlato(p,1)"
+                role="button">
+                <i class="fa fa-heart-o"></i>
+              </a>
+              <a class="btn btn-default btn-xs"
+                (click)="setGustoPlato(p,0)"
+                [class.active]="esGustoPlato(p,0)"
+                role="button">
+                <i class="fa fa-thumbs-o-up"></i>
+              </a>
+              <a class="btn btn-default btn-xs"
+                (click)="setGustoPlato(p,-1)"
+                [class.active]="esGustoPlato(p,-1)"
+                role="button">
+                <i class="fa fa-thumbs-o-down"></i>
+              </a>
 
               </div>
             </div>

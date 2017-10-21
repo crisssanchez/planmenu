@@ -1,3 +1,4 @@
+import { Familia } from '../../../both/models/familia.model';
 import { Familias } from '../../../both/collections/familias.collection';
 import { factoryOrValue } from 'rxjs/operator/multicast';
 import { Meteor } from 'meteor/meteor';
@@ -59,16 +60,16 @@ Meteor.methods({
         }
       });
 
-      if(motivoCambio == -1){
-        Familias.update(
-          { _id: Meteor.userId },
-          {
-            $addToSet: {
-              gustos_platos: { id_plato: platoOrigen._id, nombre_plato: platoOrigen.nombre, valor: motivoCambio }
-            }
-          });
-        
-      }
+    if (motivoCambio == -1) {
+      Familias.update(
+        { _id: Meteor.userId },
+        {
+          $addToSet: {
+            gustos_platos: { id_plato: platoOrigen._id, nombre_plato: platoOrigen.nombre, valor: motivoCambio }
+          }
+        });
+
+    }
 
 
   },
@@ -120,10 +121,10 @@ Meteor.methods({
 
         //Obtengo un plato aleatorio de entre los platos válidos (que cumplan las condiciones)
         plato = getAleatorio(getPlatosValidos(momento, tipo, nutrientesValidos, nutrientesNoValidos, nutrientesMinimos, menu, menuAnterior));
+        //plato = getPlatoAleatorioPonderado(getPlatosValidos(momento, tipo, nutrientesValidos, nutrientesNoValidos, nutrientesMinimos, menu, menuAnterior));
         if (plato._id != undefined) {
           consumirNutrientesPlato(plato, consumo);
         }
-
 
         //Añado el plato al día
         menuDia.push({
@@ -239,6 +240,87 @@ function getAleatorio(a: any[]): any {
   return a[Math.floor(Math.random() * a.length)];
 }
 
+//FUNCIONES PARA LA PONDERACIÓN DE PLATOS EN EL ALGORITMO
+function ponderar(a: any[], ponderacion:number): any {
+
+  let arrayPonderado = [];
+  a.forEach(function (element) {
+    var repeticiones = Math.floor(ponderacion);
+    for (let i = 0; i < repeticiones; i++) {
+      arrayPonderado.push(element);
+    }
+  });
+
+  return arrayPonderado;
+}
+
+function getPlatoAleatorioPonderado(platosValidos: any[]): any {
+
+  let otrosPlatos = platosValidos.slice();
+  let platosLove = getPlatosPorGusto(platosValidos, 1, otrosPlatos);//PLATOS LOVE
+  let platosLike = getPlatosPorGusto(platosValidos, 0, otrosPlatos);//PLATOS LIKE
+  let platosOrigenCambio = getPlatosPorCambio(platosValidos, 0, otrosPlatos);//PLATOS ORIGEN CAMBIO
+  let platosDestinoCambio = getPlatosPorCambio(platosValidos, 1, otrosPlatos);//PLATOS DESTINO CAMBIO
+
+  let platosLovePonderado = ponderar(platosLove, 5);
+  let platosLikePonderado = ponderar(platosLike, 4);
+  let platosDestinoCambioPonderado = ponderar(platosDestinoCambio, 3);
+  let otrosPlatosPonderado = ponderar(otrosPlatos, 2);
+  let platosOrigenCambioPonderado = ponderar(platosOrigenCambio, 1);
+
+  //Unir todos en un solo array
+  let platosValidosPonderados = platosLovePonderado.concat(platosLikePonderado,platosDestinoCambioPonderado,otrosPlatosPonderado,platosOrigenCambioPonderado);
+  
+  return getAleatorio(platosValidosPonderados);
+
+}
+
+function getPlatosPorGusto(platosValidos: any[], gusto: number, otrosPlatos: any[]): any[] {
+  let platos: any[] = [];
+  let gustosPlatos = Familias.findOne({ _id: Meteor.userId }).gustos_platos;
+  for (let i = 0; i < gustosPlatos.length; i++) {
+    if (gustosPlatos[i].valor == gusto) {
+      platos.push(gustosPlatos[i].id_plato);
+      let plato = otrosPlatos.filter(function (p) {
+        if (p._id == gustosPlatos[i].id_plato) {
+          return p;
+        }
+      });
+      otrosPlatos.splice(otrosPlatos.indexOf(plato),1);
+    }
+  }
+  return platos;
+}
+
+function getPlatosPorCambio(platosValidos: any[], cambio: number, otrosPlatos: any[]): any[] {
+  let platos: any[] = [];
+  let cambiosPlatos = Familias.findOne({ _id: Meteor.userId }).cambios_platos;
+  for (let i = 0; i < cambiosPlatos.length; i++) {
+    let plato;
+    if (cambio == 0) {//ORIGEN
+      platos.push(cambiosPlatos[i].id_origen);
+      plato = otrosPlatos.filter(function (p) {
+        if (p._id == cambiosPlatos[i].id_origen) {
+          return p;
+        }
+      });
+     
+    }
+    else if (cambio == 1) {//DESTINO
+      platos.push(cambiosPlatos[i].id_destino);
+      plato = otrosPlatos.filter(function (p) {
+        if (p._id == cambiosPlatos[i].id_destino) {
+          return p;
+        }
+      });
+    }
+    otrosPlatos.splice(otrosPlatos.indexOf(plato),1);
+  }
+  return platos;
+}
+
+
+
 function getNutrientesValidos(consumo: consumoNutrientes[], menuDia: Plato[], nutrientesDiaAnterior: string[]): string[] {
 
   let nutrientes: string[] = [];
@@ -340,6 +422,8 @@ function getPlatosValidos(momento: string, tipo: string, nutrientesValidos: stri
   let platosSemanaAnterior = [];
   let tiposNutrientesAyer = [];
   let nutrientesMinimosDiarios = [];
+  let platosNoValidos = [];
+  let familia: Familia = Familias.findOne({ _id: Meteor.userId });
 
   //Recojo los platos de la semana
   platosSemana = getNombrePlatosMenu(menuActual);
@@ -349,6 +433,11 @@ function getPlatosValidos(momento: string, tipo: string, nutrientesValidos: stri
     nutrientesValidos = nutrientesMin;
   }
 
+  for (let i = 0; i < familia.gustos_platos.length; i++) {
+    if (familia.gustos_platos[i].valor == 0 || familia.gustos_platos[i].valor == -1) {
+      platosNoValidos.push(familia.gustos_platos[i].id_plato);
+    }
+  }
 
   //Recojo los platos de la semana anterior
   //platosSemanaAnterior = getIdPlatosMenu(menuAnterior);
@@ -364,10 +453,17 @@ function getPlatosValidos(momento: string, tipo: string, nutrientesValidos: stri
     $and: [
 
       {
-        _id:
-        {
-          $nin: platosSemana
+        $and: [{
+          _id:
+          {
+            $nin: platosSemana
+          }
+        }, {
+          _id: {
+            $nin: platosNoValidos
+          }
         }
+        ]
       },
       {
         nutrientes:
@@ -540,25 +636,3 @@ function flat(r, a) {
 }
 
 
-/*Meteor.publish('platos_menu', function(){
-
-      var menu = Menus.findOne({owner:'dani'});
-      var dieta_platos = menu.dieta.map(function(doc){return doc.platos});
-      var platos = new Array;
-      for(var i=0; i< dieta_platos.length;i++){
-          platos.push(dieta_platos[i].map(function(doc){return doc._id}));
-      }
-      var platos_ids = new Array;
-      platos_ids = platos.reduce(flat,[]);
-
-      var platos_menu = Platos.find({_id: { $in : platos_ids } } ) ;
-      return platos_menu;
-});*/
-
-/*Meteor.publish('miplato',function(){
-
-  var menu = Menus.findOne({owner:'cris'});
-  var platos_ids = menu.dieta.map((doc)=>doc._id);
-  var platos = Platos.find({_id:{$in: platos_ids}});
-  return platos;
-});*/
