@@ -54,6 +54,10 @@ Meteor.methods({
     }
   },
 
+  addProductoCarro(menuId: string, producto:string){
+    Productos.insert({menu:menuId,nombre: producto,activo:true});
+  },
+
   setActivoProductoMenu(menuId: string, producto: Producto, valor: boolean) {
     Productos.update({ menu: menuId, nombre: producto.nombre }, { $set: { activo: valor } });
   },

@@ -48,8 +48,6 @@ export class CarroComponent {
   productosSub: Subscription;
   productos: Producto[];
 
-  owner: string = 'dani';
-
   clickMapa(evento) {
 
     let nuevoMarcador: Marcador = {
@@ -73,9 +71,12 @@ export class CarroComponent {
     this.productosSub = MeteorObservable.subscribe('productosMenu', this.menuId).subscribe(() => {
       MeteorObservable.autorun().subscribe(() => {
         this.productos = Productos.find().fetch();
-
       })
     })
+  }
+
+  addProducto(producto:string){
+    MeteorObservable.call('addProductoCarro', this.menuId,producto).subscribe();
   }
 
   /*ngAfterViewInit() {
@@ -105,7 +106,7 @@ export class CarroComponent {
       navigator.geolocation.getCurrentPosition((position) => {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
-        this.zoom = 12;
+        this.zoom = 15;
       });
     }
   }

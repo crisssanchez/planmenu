@@ -73,8 +73,36 @@
               </div>
             </div>
           </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Gestión de avisos</h3>
+            </div>
+            <div class="panel-body">
+              <div class="radio">
+                <label>
+                  <input type="radio"
+                    name="aviso"
+                    [value] = 0
+                    id="aviso"
+                    [(ngModel)]="usuario.aviso">Semanal</label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio"
+                    name="aviso"
+                    [value] = 1
+                    id="aviso"
+                    [(ngModel)]="usuario.aviso">Diario</label>
+              </div>
+            </div>
+          </div>
         </div>
+
+
       </div>
+
+
 
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -87,14 +115,14 @@
               <select class="selectpicker"
                 name="comienzo"
                 [(ngModel)]="usuario.comienzo">
-                    <option>Lunes</option>
-                    <option>Martes</option>
-                    <option>Miércoles</option>
-                    <option>Jueves</option>
-                    <option>Viernes</option>
-                    <option>Sábado</option>
-                    <option>Domingo</option>
-                  </select>
+                <option>Lunes</option>
+                <option>Martes</option>
+                <option>Miércoles</option>
+                <option>Jueves</option>
+                <option>Viernes</option>
+                <option>Sábado</option>
+                <option>Domingo</option>
+              </select>
             </div>
           </div>
           <div class="form-group">
@@ -102,17 +130,17 @@
             <div class="col-xs-5">
               <select class="selectpicker"
                 name="dificultad"
-                [(ngModel)]="usuario.dificultad"> 
-                      <option>Baja</option>
-                      <option>Media</option>
-                      <option>Alta</option>
-                    </select>
+                [(ngModel)]="usuario.dificultad">
+                <option>BAJA</option>
+                <option>MEDIA</option>
+                <option>ALTA</option>
+              </select>
             </div>
           </div>
           <div class="form-group">
             <label class="col-xs-2">Tiempo elaboración platos:</label>
             <div class="col-xs-5">
-              <input type="text"
+              <input type="number"
                 style="width:10%;"
                 name="tiempo"
                 id="tiempo"
@@ -143,15 +171,24 @@
                     <button type="button"
                       (click)="cambiarGustos(nutriente._id, 1)"
                       [class.active]="gustoNutriente(nutriente._id, 1)"
-                      class="btn btn-default"><i class="fa fa-heart-o" aria-hidden="true"></i></button>
+                      class="btn btn-default">
+                      <i class="fa fa-heart-o"
+                        aria-hidden="true"></i>
+                    </button>
                     <button type="button"
                       (click)="cambiarGustos(nutriente._id,0)"
                       [class.active]="gustoNutriente(nutriente._id, 0)"
-                      class="btn btn-default"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button>
+                      class="btn btn-default">
+                      <i class="fa fa-thumbs-o-up"
+                        aria-hidden="true"></i>
+                    </button>
                     <button type="button"
                       (click)="cambiarGustos(nutriente._id,-1)"
                       [class.active]="gustoNutriente(nutriente._id, -1)"
-                      class="btn btn-default"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>
+                      class="btn btn-default">
+                      <i class="fa fa-thumbs-o-down"
+                        aria-hidden="true"></i>
+                    </button>
                   </div>
                 </div>
               </div>

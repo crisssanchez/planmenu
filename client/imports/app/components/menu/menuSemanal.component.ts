@@ -34,7 +34,6 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
   dieta: Dieta[];
   menu: Menu;
   menuSub: Subscription;
-  owner: string = 'dani';
   alternativas: Plato[]=[];
   motivo: number;
   platoACambiar: Plato;
@@ -60,9 +59,9 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
     if (this.menuSub) {
       this.menuSub.unsubscribe();
     }
-    this.menuSub = MeteorObservable.subscribe('menuSemanal', this.owner).subscribe(() => {
+    this.menuSub = MeteorObservable.subscribe('menuSemanal', Meteor.userId()).subscribe(() => {
       MeteorObservable.autorun().subscribe(() => {
-        this.menu = Menus.findOne({ owner: this.owner }, { sort: { numero: -1 } });
+        this.menu = Menus.findOne({ owner: Meteor.userId() }, { sort: { numero: -1 } });
         this.dieta = this.menu.dieta;
       });
     });
@@ -214,6 +213,26 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
 
   addProductosMenuCarro() {
     MeteorObservable.call('addProductosMenuCarro', this.menu).subscribe();
+  }
+
+  getNutrientes(dia:string):string[]{
+
+    let platosAlmuerzo: any[] = this.dieta[dia].almuerzo;
+    let platosCena: any[] = this.dieta[dia].cena;
+    let platosDia: Plato[] = platosAlmuerzo.concat(platosCena);
+
+    let nutrientesDia: string[] = [];
+    for(let i = 0; i < platosDia.length; i++){
+      let nutrientesPlato: string[] = [];
+      nutrientesPlato = platosDia[i].nutrientes;
+      for(let j = 0; j < nutrientesPlato.length; j++){
+        if(nutrientesDia.indexOf(nutrientesPlato[j]) < 0){
+          nutrientesDia.push(nutrientesPlato[j]);
+        }
+      }
+    }
+
+    return nutrientesDia;
   }
 
 

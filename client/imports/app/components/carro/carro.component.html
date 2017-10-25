@@ -8,7 +8,6 @@
         type="search"
         name="Añadir"
         placeholder="Añadir..."
-        (keyup)="searchProducto(cadenaTexto.value)"
         #cadenaTexto>
       <span class="input-group-btn">
           <div class="btn-group dropup">
@@ -24,7 +23,11 @@
 
 <div class="col-md-5">
   <table>
-    <tr></tr>
+
+    <tr>
+  
+    </tr>
+  
     <tr *ngFor="let producto of productos">
       <td>
         <a *ngIf="producto.activo"
@@ -40,6 +43,7 @@
                         <i  class="fa fa-check-square-o">  </i>
                       </a>
       </td>
+     
       <td *ngIf="producto.activo == true"
         style="text-decoration:none;">
         {{ producto.nombre }}

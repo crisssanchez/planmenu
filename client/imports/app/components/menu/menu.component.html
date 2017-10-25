@@ -1,7 +1,7 @@
 <div class="container cabecera col-xs-7">
   <div class="page-header">
     <div class="titulo col-xs-7">
-      <h4 *ngIf="menu">Menú {{menu._id}}</h4>
+      <h4 *ngIf="menu">Menú {{menu.numero}} ({{menu.inicio | date:'yMd'}} - {{menu.fin | date:'yMd'}})</h4>
       <button type="button"
         name="button"
         class="btn btn-success"

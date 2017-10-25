@@ -22,7 +22,7 @@ export class MenusComponent implements OnInit, OnDestroy{
 
   ngOnInit(){
 
-    this.menus = Menus.find({}).zone();
+    this.menus = Menus.find({},{sort: { numero: -1 }}).zone();
     this.menusSub = MeteorObservable.subscribe('menus').subscribe();
 
   }

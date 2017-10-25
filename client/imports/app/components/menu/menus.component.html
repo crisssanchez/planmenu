@@ -1,15 +1,24 @@
-
 <div class="container cabecera col-xs-7">
-    <div class="page-header">
-      <div class="titulo col-xs-5">
-          <h4>Menús de usuario</h4>
-      </div>
-      <br><br>
+  <div class="page-header">
+    <div class="titulo col-xs-5">
+      <h4>Menús anteriores</h4>
     </div>
+    <br>
+    <br>
+  </div>
 </div>
 
 <div class="container col-xs-7">
-  <div *ngFor="let menu of menus | async;let i = index">
-    <a [routerLink]="['/menu', menu._id]"><h4>Menu {{i+1}}</h4></a>
-  </div>
+  <ul>
+    <div *ngFor="let menu of menus | async;">
+
+      <li>
+        <a [routerLink]="['/menu', menu._id]">
+          <h4>Menu {{menu.numero}} ({{ menu.inicio | date:'yMd' }} - {{ menu.fin | date:'yMd'}})</h4>
+        </a>
+      </li>
+
+
+    </div>
+  </ul>
 </div>

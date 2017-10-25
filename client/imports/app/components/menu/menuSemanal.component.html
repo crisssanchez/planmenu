@@ -290,4 +290,19 @@
       </div>
     </div>
   </div>
+
+  <div class="row">
+      
+      <div  *ngFor="let d of dieta; let dia = index">
+          <div id="grafica-diaria"  class="text-center col-md-1" >
+              <i class="fa fa-info-circle" ></i>
+            <div *ngFor="let n of getNutrientes(dia);let dia = index">
+                <span class="label label-primary" style="display:inline;">{{ n }}</span>
+            </div>
+          
+            </div>
+            
+      
+      </div>
 </div>
+
