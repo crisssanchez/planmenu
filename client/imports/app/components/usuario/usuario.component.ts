@@ -11,8 +11,8 @@ import { Subscription } from 'rxjs/Subscription';
 import template from './usuario.component.html';
 import { InjectUser } from 'angular2-meteor-accounts-ui';
 import { Meteor } from 'meteor/meteor';
-import { Nutrientes } from '../../../../../both/collections/nutrientes.collection';
-import { Nutriente } from '../../../../../both/models/nutriente.model';
+import { Alimentos } from '../../../../../both/collections/alimentos.collection';
+import { Alimento } from '../../../../../both/models/alimento.model';
 import { Platos } from '../../../../../both/collections/platos.collection';
 
 
@@ -26,13 +26,11 @@ export class UsuarioComponent {
   user: Meteor.User;
   usuario: Familia;
   usuarioSub: Subscription;
-  nutrientes: Observable<Nutriente[]>;
-  nutrientesSub: Subscription;
-
+  alimentos: Observable<Alimento[]>;
+  alimentosSub: Subscription;
 
   idPlato: string;
 
-  prueba: string;
 
   ngOnInit() {
 
@@ -45,38 +43,40 @@ export class UsuarioComponent {
       });
     });
 
-    if (this.nutrientesSub) {
-      this.nutrientesSub.unsubscribe();
+    if (this.alimentosSub) {
+      this.alimentosSub.unsubscribe();
     }
-    this.nutrientes = Nutrientes.find({}).zone();
-    this.nutrientesSub = MeteorObservable.subscribe('nutrientes').subscribe();
+    this.alimentos = Alimentos.find({}).zone();
+    
+    
+    this.alimentosSub = MeteorObservable.subscribe('alimentos').subscribe();
 
   }
 
-  cambiarGustos(nutrienteId: string, valor: number) {
+  cambiarGustos(alimentoId: string, valor: number) {
     let encontrado: boolean = false;
-    for (let i = 0; i < this.usuario.gustos_nutrientes.length; i++) {
-      if (this.usuario.gustos_nutrientes[i].id_nutriente == nutrienteId) {
-        this.usuario.gustos_nutrientes[i].valor = valor;
+    for (let i = 0; i < this.usuario.gustos_alimentos.length; i++) {
+      if (this.usuario.gustos_alimentos[i].id_alimento == alimentoId) {
+        this.usuario.gustos_alimentos[i].valor = valor;
         encontrado = true;
       }
     }
     if (!encontrado) {
-      this.usuario.gustos_nutrientes.push({
-        id_nutriente: nutrienteId,
+      this.usuario.gustos_alimentos.push({
+        id_alimento: alimentoId,
         valor: valor
       });
     }
 
   }
 
-  gustoNutriente(nutrienteId: string, valor: number) {
-    if(this.usuario.gustos_nutrientes === undefined){
-      this.usuario.gustos_nutrientes = [];
+  gustoAlimento(alimentoId: string, valor: number) {
+    if(this.usuario.gustos_alimentos === undefined){
+      this.usuario.gustos_alimentos = [];
     }
-    for (let i = 0; i < this.usuario.gustos_nutrientes.length; i++) {
-      if (this.usuario.gustos_nutrientes[i].id_nutriente == nutrienteId) {
-        return this.usuario.gustos_nutrientes[i].valor === valor;
+    for (let i = 0; i < this.usuario.gustos_alimentos.length; i++) {
+      if (this.usuario.gustos_alimentos[i].id_alimento == alimentoId) {
+        return this.usuario.gustos_alimentos[i].valor === valor;
       }
     }
   }
@@ -86,7 +86,7 @@ export class UsuarioComponent {
   }
 
   ngOnDestroy() {
-    this.nutrientesSub.unsubscribe();
+    this.alimentosSub.unsubscribe();
     this.usuarioSub.unsubscribe();
   }
 

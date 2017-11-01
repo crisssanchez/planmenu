@@ -66,41 +66,41 @@ export class MenuComponent implements OnInit, OnDestroy{
     this.menuSub.unsubscribe();
   }
 
-  bgColor(nutriente: string): string {
-    if (nutriente == 'VERDURA') {
+  bgColor(alimento: string): string {
+    if (alimento == 'VERDURA') {
       return "green";
     }
-    if (nutriente == 'LEGUMBRE'){
+    if (alimento == 'LEGUMBRE'){
       return "blue";
     }
-    if(nutriente == 'PASTA'){
+    if(alimento == 'PASTA'){
       return "darksalmon";
     }
-    if(nutriente == 'CARNE ROJA'){
+    if(alimento == 'CARNE ROJA'){
       return "red";
     }
-    if(nutriente == 'CARNE BLANCA'){
+    if(alimento == 'CARNE BLANCA'){
       return "brown";
     }
-    if(nutriente == 'PESCADO BLANCO'){
+    if(alimento == 'PESCADO BLANCO'){
       return "pink";
     }
-    if(nutriente == 'PESCADO AZUL'){
+    if(alimento == 'PESCADO AZUL'){
       return "darkblue";
     }
-    if(nutriente == 'HUEVO'){
+    if(alimento == 'HUEVO'){
       return "orange";
     }
-    if(nutriente == 'ARROZ'){
+    if(alimento == 'ARROZ'){
       return "gray";
     }
-    if(nutriente == 'PATATA'){
+    if(alimento == 'PATATA'){
       return "purple";
     }
-    if(nutriente == 'FRITO'){
+    if(alimento == 'FRITO'){
       return "gold";
     }
-    if(nutriente == 'MARISCO'){
+    if(alimento == 'MARISCO'){
       return "hotpink";
     }
     return "black";

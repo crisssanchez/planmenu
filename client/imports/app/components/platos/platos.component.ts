@@ -43,12 +43,12 @@ export class PlatosComponent implements OnInit, OnDestroy{
                                       {"tiempo": Number(cadena)},
                                       {"tipos":{$regex: cadena, $options: "i"}},
                                       {"momentos":{$regex: cadena, $options: "i"}},
-                                      {"nutrientes":{$regex: cadena, $options: "i"}}]}).zone();
+                                      {"alimentos":{$regex: cadena, $options: "i"}}]}).zone();
   }
 
 
   setPlato(plato: Plato):void{
-    Platos.update({_id: plato._id}, {nombre: plato.nombre, dificultad:plato.dificultad, tiempo:plato.tiempo, tipos:plato.tipos, nutrientes:plato.nutrientes, momentos:plato.momentos});
+    Platos.update({_id: plato._id}, {nombre: plato.nombre, dificultad:plato.dificultad, tiempo:plato.tiempo, tipos:plato.tipos, alimentos:plato.alimentos, momentos:plato.momentos});
   }
 
   removePlato(plato: Plato): void {

@@ -1,21 +1,21 @@
 import { MongoObservable } from 'meteor-rxjs';
 import { Mongo } from 'meteor/mongo';
-import { Nutriente } from '../models/nutriente.model';
+import { Alimento } from '../models/alimento.model';
 import { Meteor } from 'meteor/meteor';
 
-export const Nutrientes = new MongoObservable.Collection<Nutriente>('nutrientes');
+export const Alimentos = new MongoObservable.Collection<Alimento>('alimentos');
 
 function loggedIn(){
   return !!Meteor.user();
 }
 
-Nutrientes.allow({
+Alimentos.allow({
   insert: loggedIn,
   update: loggedIn,
   remove: loggedIn
 });
 
-export function sort( a:Nutriente, b:Nutriente ){
+export function sort( a:Alimento, b:Alimento ){
   if(( a.minDia != null ) && ( b.minDia != null ) && ( a.minDia > b.minDia )){
     return -1;
   }else if(( a.minDia != null ) && ( b.minDia != null ) && ( a.minDia < b.minDia )){

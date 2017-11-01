@@ -10,8 +10,8 @@ export interface Familia extends CollectionObject {
   dificultad?: string,// BAJA, MEDIA, ALTA
   tiempo?: number, // En minutos
   comienzo?: string, // LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO
-  gustos_nutrientes?: {
-    id_nutriente: string,
+  gustos_alimentos?: {
+    id_alimento: string,
     valor:number //-1,0,1
   }[],
   gustos_ingredientes?: {

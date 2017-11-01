@@ -1,7 +1,7 @@
 import { Plato } from '../../../both/models/plato.model';
 import { Ingrediente } from '../../../both/models/ingrediente.model';
-import { Nutriente } from '../../../both/models/nutriente.model';
-import { Nutrientes } from '../../../both/collections/nutrientes.collection';
+import { Alimento } from '../../../both/models/alimento.model';
+import { Alimentos } from '../../../both/collections/alimentos.collection';
 import { Meteor } from 'meteor/meteor';
 
 import { Platos } from '../../../both/collections/platos.collection';
@@ -22,7 +22,7 @@ Meteor.methods({
     for (let i = 0; i < 1000; i++) {
       Platos.insert({
         nombre: getNombreAleatorio(),
-        nutrientes: getNutrientesAleatorios(),
+        alimentos: getAlimentosAleatorios(),
         dificultad: getDificultadAleatoria(),
         tiempo: getNumAleatorio(10, 120),
         tipos: getTiposPlato(),
@@ -41,8 +41,8 @@ Meteor.methods({
       _id: {
         $ne:p._id
       },
-      nutrientes: {
-        $all:p.nutrientes
+      alimentos: {
+        $all:p.alimentos
 
       }
     }).fetch();
@@ -63,13 +63,13 @@ function getNombreAleatorio(): string {
   return nombre;
 }
 
-function getNutrientesAleatorios(): string[] {
-  let nutrientes: Nutriente[] = Nutrientes.find().fetch();
+function getAlimentosAleatorios(): string[] {
+  let alimentos: Alimento[] = Alimentos.find().fetch();
   let n: string[] = [];
 
   let num = getNumAleatorio(1, 3);
   for (let i = 0; i < num; i++) {
-    n.push(getAleatorio(nutrientes)._id);
+    n.push(getAleatorio(alimentos)._id);
   }
 
   return n;

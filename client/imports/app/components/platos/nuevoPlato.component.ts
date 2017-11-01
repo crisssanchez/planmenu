@@ -41,7 +41,7 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
   otono: boolean = true;
   invierno: boolean = true;
 
-  posiblesNutrientes = [
+  posiblesAlimentos = [
     "LEGUMBRE",
     "CARNE ROJA",
     "CARNE BLANCA",
@@ -57,7 +57,7 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
     "LACTEO"
   ];
 
-  nutrientes = {};
+  alimentos = {};
 
   ingredientes = [];
 
@@ -75,7 +75,7 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
     this.verano = false;
     this.otono = false;
     this.invierno = false;
-    this.nutrientes = {};
+    this.alimentos = {};
     this.ingredientes = [];
   }
 
@@ -85,8 +85,8 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
       //this.ings = Ingredientes.collection.find().fetch();
     });
 
-    for (let nutriente in this.posiblesNutrientes) {
-      this.nutrientes[nutriente] = false;
+    for (let alimento in this.posiblesAlimentos) {
+      this.alimentos[alimento] = false;
     }
 
   }
@@ -143,7 +143,7 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
     }
     let plato: Plato = {
       nombre: '',
-      nutrientes: [],
+      alimentos: [],
       ingredientes: []
     };
 
@@ -180,10 +180,10 @@ export class NuevoPlatoComponent implements OnInit, OnDestroy {
         plato.temporada.push('INVIERNO');
     }
 
-    plato.nutrientes = [];
-    for (let nutriente of this.posiblesNutrientes) {
-      if (this.nutrientes[nutriente]) {
-        plato.nutrientes.push(nutriente);
+    plato.alimentos = [];
+    for (let alimento of this.posiblesAlimentos) {
+      if (this.alimentos[alimento]) {
+        plato.alimentos.push(alimento);
       }
     }
     if (this.ingredientes) {

@@ -43,7 +43,7 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
     _id: undefined,
     nombre: undefined,
     imagenUrl:undefined,
-    nutrientes:undefined,
+    alimentos:undefined,
     ingredientes:undefined
   };
   motivoIngredientes: Ingrediente[] = [];
@@ -130,7 +130,7 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
             _id:result[i]._id,
             nombre: result[i].nombre,
             imagenUrl:result[i].imagenUrl,
-            nutrientes:result[i].nutrientes,
+            alimentos:result[i].alimentos,
             ingredientes: result[i].ingredientes
           });
         }
@@ -150,7 +150,7 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
       _id: undefined,
       nombre: undefined,
       imagenUrl:undefined,
-      nutrientes:undefined,
+      alimentos:undefined,
       ingredientes:undefined
     };
     this.setPlatoSeleccionado(p);
@@ -164,7 +164,7 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
       _id:plato._id,
       nombre: plato.nombre,
       imagenUrl: plato.imagenUrl,
-      nutrientes: plato.nutrientes,
+      alimentos: plato.alimentos,
       ingredientes: plato.ingredientes
     }
   }
@@ -181,7 +181,7 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
     this.platoSeleccionado._id = pAlternativo._id;
     this.platoSeleccionado.nombre = pAlternativo.nombre;
     this.platoSeleccionado.imagenUrl = pAlternativo.imagenUrl;
-    this.platoSeleccionado.nutrientes = pAlternativo.nutrientes;
+    this.platoSeleccionado.alimentos = pAlternativo.alimentos;
   }
 
   esPlatoSeleccionado(pAlternativo: Plato){
@@ -213,26 +213,6 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
 
   addProductosMenuCarro() {
     MeteorObservable.call('addProductosMenuCarro', this.menu).subscribe();
-  }
-
-  getNutrientes(dia:string):string[]{
-
-    let platosAlmuerzo: any[] = this.dieta[dia].almuerzo;
-    let platosCena: any[] = this.dieta[dia].cena;
-    let platosDia: Plato[] = platosAlmuerzo.concat(platosCena);
-
-    let nutrientesDia: string[] = [];
-    for(let i = 0; i < platosDia.length; i++){
-      let nutrientesPlato: string[] = [];
-      nutrientesPlato = platosDia[i].nutrientes;
-      for(let j = 0; j < nutrientesPlato.length; j++){
-        if(nutrientesDia.indexOf(nutrientesPlato[j]) < 0){
-          nutrientesDia.push(nutrientesPlato[j]);
-        }
-      }
-    }
-
-    return nutrientesDia;
   }
 
 

@@ -5,7 +5,7 @@
     <form action="actualizarUsuario()"
       class="form-horizontal">
       <div class="row">
-
+        
         <div class="col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -157,34 +157,34 @@
         </div>
         <div class="panel-body">
 
-          <div *ngFor="let nutriente of nutrientes | async"
+          <div *ngFor="let alimento of alimentos | async"
             class="row">
 
             <div class="col-lg-3">
 
               <div class="form-group">
-                <label class="col-xs-2">{{ nutriente._id }}:</label>
+                <label class="col-xs-2">{{ alimento._id }}:</label>
                 <div class="col-xs-5">
                   <div class="btn-group"
                     role="group"
                     aria-label="...">
                     <button type="button"
-                      (click)="cambiarGustos(nutriente._id, 1)"
-                      [class.active]="gustoNutriente(nutriente._id, 1)"
+                      (click)="cambiarGustos(alimento._id, 1)"
+                      [class.active]="gustoAlimento(alimento._id, 1)"
                       class="btn btn-default">
                       <i class="fa fa-heart-o"
                         aria-hidden="true"></i>
                     </button>
                     <button type="button"
-                      (click)="cambiarGustos(nutriente._id,0)"
-                      [class.active]="gustoNutriente(nutriente._id, 0)"
+                      (click)="cambiarGustos(alimento._id,0)"
+                      [class.active]="gustoAlimento(alimento._id, 0)"
                       class="btn btn-default">
                       <i class="fa fa-thumbs-o-up"
                         aria-hidden="true"></i>
                     </button>
                     <button type="button"
-                      (click)="cambiarGustos(nutriente._id,-1)"
-                      [class.active]="gustoNutriente(nutriente._id, -1)"
+                      (click)="cambiarGustos(alimento._id,-1)"
+                      [class.active]="gustoAlimento(alimento._id, -1)"
                       class="btn btn-default">
                       <i class="fa fa-thumbs-o-down"
                         aria-hidden="true"></i>

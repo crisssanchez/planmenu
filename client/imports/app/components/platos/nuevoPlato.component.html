@@ -118,10 +118,10 @@
         <div class="form-group">
           <h1>
             <span class="label label-for"
-              (click)="nutrientes[nutriente] = !nutrientes[nutriente]"
-              [ngClass]="{'label-default': !nutrientes[nutriente], 'label-primary': nutrientes[nutriente]}"
-              *ngFor="let nutriente of posiblesNutrientes">
-              {{ nutriente }}
+              (click)="alimentos[alimento] = !alimentos[alimento]"
+              [ngClass]="{'label-default': !alimentos[alimento], 'label-primary': alimentos[alimento]}"
+              *ngFor="let alimento of posiblesAlimentos">
+              {{ alimento }}
             </span>
           </h1>
         </div>

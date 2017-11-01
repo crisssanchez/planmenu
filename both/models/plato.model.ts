@@ -9,7 +9,7 @@ export interface Plato extends CollectionObject{
   tiempo?: number, // En minutos
   tipos?: string[], // PRIMERO, SEGUNDO
   momentos?: string[], // ALMUERZO, CENA
-  nutrientes: string[], // De la base de datos
+  alimentos: string[], // De la base de datos
   temporada?: string[], // PRIMAVERA, VERANO, OTOÑO INVIERNO
   ingredientes: string[],
   infoNutricional?: { 
