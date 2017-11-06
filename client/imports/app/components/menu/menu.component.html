@@ -23,26 +23,26 @@
         <li class="list-group-item"
           *ngFor="let plato of dia.almuerzo">
 
-          <div *ngIf="plato.nombre == undefined">
-            <h4>?</h4>
-            <div class="label"
-              *ngFor="let alimento of plato.alimentos"
-              [style.backgroundColor]="bgColor(alimento)">
-              {{ alimento }}
-            </div>
-          </div>
+          <div style="height: 150px; width: 100%; background-position: center; background-size: cover;"
+          [style.backgroundImage]="'url(' + plato.imagenUrl + ')'"></div>
 
-          <div *ngIf="plato.nombre != undefined">
-            <div>{{ plato.nombre }}</div>
+          <div *ngIf="plato.nombre == undefined">
             <div class="label"
               *ngFor="let alimento of plato.alimentos"
               [style.backgroundColor]="bgColor(alimento)">
               {{ alimento }}
             </div>
-            <span class="label"
-              style="background-color:white;color:black">{{plato.tipos}}</span>
-            <span class="label"
-              style="background-color:white;color:black">{{plato.momentos}}</span>
+        </div>
+        
+          <div *ngIf="plato.nombre != undefined">
+              
+            <div><a [routerLink]="['/recetaPlato', plato._id]"
+              style="display:inline;">{{plato.nombre}}</a></div>
+            <div class="label"
+              *ngFor="let alimento of plato.alimentos"
+              [style.backgroundColor]="bgColor(alimento)">
+              {{ alimento }}
+            </div>
           </div>
         </li>
       </ul>
@@ -51,26 +51,27 @@
         <li class="list-group-item"
           *ngFor="let plato of dia.cena">
 
+          <div style="height: 150px; width: 100%; background-position: center; background-size: cover;"
+          [style.backgroundImage]="'url(' + plato.imagenUrl + ')'">
+        </div>
+
           <div *ngIf="plato.nombre == undefined">
-            <h4>?</h4>
             <div class="label"
               *ngFor="let alimento of plato.alimentos"
               [style.backgroundColor]="bgColor(alimento)">
               {{ alimento }}
             </div>
           </div>
-
+         
           <div *ngIf="plato.nombre != undefined">
-            <div>{{ plato.nombre }}</div>
+              <div><a [routerLink]="['/recetaPlato', plato._id]"
+                style="display:inline;">{{plato.nombre}}</a></div>
+         
             <div class="label"
               *ngFor="let alimento of plato.alimentos"
               [style.backgroundColor]="bgColor(alimento)">
               {{ alimento }}
             </div>
-            <span class="label"
-              style="background-color:white;color:black">{{plato.tipos}}</span>
-            <span class="label"
-              style="background-color:white;color:black">{{plato.momentos}}</span>
           </div>
 
 

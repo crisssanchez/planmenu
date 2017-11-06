@@ -1,8 +1,9 @@
+import { InjectUser, LoginButtons } from 'angular2-meteor-accounts-ui';
 import { Component, Inject } from '@angular/core';
 
 import template from './app.component.html';
-import { InjectUser } from 'angular2-meteor-accounts-ui';
 import { Meteor } from 'meteor/meteor';
+import { HeaderComponent } from './shared/header.component';
 
 @Component({
   selector: 'app',

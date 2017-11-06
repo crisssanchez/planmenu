@@ -12,15 +12,15 @@ import { UsuarioComponent } from './components/usuario/usuario.component';
 import { FamiliaResolve } from './services/familia-resolve.service';
 
 const APP_ROUTES: Routes = [
-  { path: '', component: MenuSemanalComponent },
+  { path: '', component: MenuSemanalComponent, canActivate:['canActivateForLoggedIn'] },
   { path: 'usuario', component: UsuarioComponent, canActivate:['canActivateForLoggedIn']},
   { path: 'menuSemanal', component: MenuSemanalComponent, canActivate:['canActivateForLoggedIn'], resolve: { fam: FamiliaResolve } },
   { path: 'menu/:_id', component: MenuComponent, canActivate:['canActivateForLoggedIn'] },
   { path: 'menus', component: MenusComponent, canActivate:['canActivateForLoggedIn'] },
-  { path: 'recetaPlato', component: RecetaPlatoComponent },
-  { path: 'recetaPlato/:_id', component: RecetaPlatoComponent },
-  { path: 'recetaPlato/:_id/:nombre', component: RecetaPlatoComponent },
-  { path: 'platos', component: PlatosComponent },
+  { path: 'recetaPlato', component: RecetaPlatoComponent, canActivate:['canActivateForLoggedIn'] },
+  { path: 'recetaPlato/:_id', component: RecetaPlatoComponent, canActivate:['canActivateForLoggedIn'] },
+  { path: 'recetaPlato/:_id/:nombre', component: RecetaPlatoComponent, canActivate:['canActivateForLoggedIn'] },
+  { path: 'platos', component: PlatosComponent, canActivate:['canActivateForLoggedIn'] },
   { path: 'nuevoPlato', component: NuevoPlatoComponent , canActivate:['canActivateForLoggedIn']},
   { path: 'carro' , component: CarroComponent, canActivate:['canActivateForLoggedIn']}
 

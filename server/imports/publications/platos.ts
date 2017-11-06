@@ -37,20 +37,43 @@ Meteor.methods({
     let platosAlternativos: Plato[] = [];
     let alternativas: Plato[] = [];
 
-    alternativas = Platos.find({
-      _id: {
-        $ne:p._id
-      },
-      alimentos: {
-        $all:p.alimentos
+    let plato:Plato = Platos.findOne({_id:p._id});
 
-      }
+    alternativas = Platos.find({
+      $and: [
+        {
+          _id: {
+            $ne: plato._id
+          }
+        },
+        {
+          alimentos: {
+            $all: plato.alimentos
+          }
+        },
+        {
+          momentos: {
+            $in: plato.momentos
+          }
+        },
+        {
+          tipos: {
+            $in: plato.tipos
+          }
+        }
+      ]
     }).fetch();
 
-    for (let i = 0; i < 3; i++) {
-      let p = getAleatorio(alternativas);
-      platosAlternativos.push(p);
-      alternativas.splice(alternativas.indexOf(p),1);
+    let numPlatos = 0;
+    if(alternativas.length > 3){
+      numPlatos = 3
+    }else{
+      numPlatos = alternativas.length;
+    }
+    for (let i = 0; i < numPlatos; i++) {
+      let platoAleatorio = getAleatorio(alternativas);
+      platosAlternativos.push(platoAleatorio);
+      alternativas.splice(alternativas.indexOf(platoAleatorio), 1);
     }
 
     return platosAlternativos;

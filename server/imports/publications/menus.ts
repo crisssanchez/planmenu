@@ -1,3 +1,4 @@
+import { MOMENTO } from '../../../client/imports/app/data';
 import { Familia } from '../../../both/models/familia.model';
 import { Familias } from '../../../both/collections/familias.collection';
 import { factoryOrValue } from 'rxjs/operator/multicast';
@@ -10,6 +11,7 @@ import { Alimentos } from '../../../both/collections/alimentos.collection';
 import { Alimento } from '../../../both/models/alimento.model';
 import { Producto } from '../../../both/models/producto.model';
 import { Productos } from '../../../both/collections/productos.collection';
+import * as moment from 'moment';
 
 
 Meteor.publish('menus', () => Menus.find());
@@ -77,11 +79,12 @@ Meteor.methods({
   generarMenuSemana() {
 
     let menu: Menu = {
-      inicio: undefined,
-      fin: undefined,
+      _id: "",
+      inicio: new Date(),
+      fin: new Date(),
       dieta: [],
-      numero: undefined,
-      owner: undefined
+      numero: Menus.find({ owner: Meteor.userId }).fetch().length + 1,
+      owner: Meteor.userId()
     };
     let menuAnterior = getMenuAnterior();
     let alimentos: Alimento[] = Alimentos.find().fetch();
@@ -98,6 +101,7 @@ Meteor.methods({
     //Establecer las fechas del menú
     menu.inicio = dias[0];
     menu.fin = dias[6];
+    menu._id = moment(menu.inicio).format('DDMMYYYY') + "-" + moment(menu.fin).format('DDMMYYYY');
 
     //Recorro los días de la semana
     while (dias.length != 0) {
@@ -122,11 +126,10 @@ Meteor.methods({
 
         let alimentosValidos: string[] = getAlimentosValidos(consumo, dietaDia, alimentosAyer);
         let alimentosNoValidos: string[] = getAlimentosNoValidos(consumo, dietaDia, alimentosAyer);
-        let alimentosMinimos: string[] = getAlimentosMinimos(consumo);
+        let alimentosMinimos: string[] = getAlimentosMinimos(consumo, dietaDia, alimentosAyer);
 
 
         //Obtengo un plato aleatorio de entre los platos válidos (que cumplan las condiciones)
-        //plato = getAleatorio(getPlatosValidos(momento, tipo, alimentosValidos, alimentosNoValidos, alimentosMinimos, menu, menuAnterior));
         plato = getPlatoAleatorioPonderado(getPlatosValidos(momento, tipo, alimentosValidos, alimentosNoValidos, alimentosMinimos, dietaDia, menu));
 
         console.log(dia.getDay() + "(" + momento + "):" + plato.nombre + "[" + plato.alimentos + "]");
@@ -150,6 +153,7 @@ Meteor.methods({
         });
 
         //Añado los ingredientes del plato del día al carro
+
         Meteor.call('addProductosMenuCarro', menu);
       }
 
@@ -160,8 +164,6 @@ Meteor.methods({
         cena: [dietaDia[2], dietaDia[3]]
       });
 
-
-
       //Inicializo el consumo diario
       consumo = inicializarConsumo(alimentos, consumo);
 
@@ -171,6 +173,13 @@ Meteor.methods({
 
     //Devuelvo el menú ordenado por fecha
     ordenarMenu(menu);
+
+    //Guardar menú   
+    if (Menus.findOne({ _id: menu._id })) {
+      Menus.update({_id:menu._id},{$set:{dieta:menu.dieta}});
+    } else {
+      Menus.insert(menu);
+    }
 
     return menu;
   }
@@ -339,7 +348,7 @@ function getAlimentosValidos(consumo: consumoAlimentos[], menuDia: Plato[], alim
 
       //Reparte los alimentos que no han alcanzado su máximo semanal si son válidos
       if (consumo[i].consumoSemanal < consumo[i].maxSemanal) {
-        if (esAlimentoValido(alimento, consumo, menuDia, alimentosDiaAnterior)) {
+        if (esAlimentoValido(alimento, menuDia, alimentosDiaAnterior)) {
           alimentos.push(alimento);
         }
       }
@@ -362,7 +371,7 @@ function getAlimentosNoValidos(consumo: consumoAlimentos[], menuDia: Plato[], al
       if (consumo[i].consumoSemanal == consumo[i].maxSemanal) {
         alimentos.push(alimento);
       } else {
-        if (!esAlimentoValido(alimento, consumo, menuDia, alimentosDiaAnterior)) {
+        if (!esAlimentoValido(alimento, menuDia, alimentosDiaAnterior)) {
           alimentos.push(alimento);
         }
       }
@@ -373,33 +382,53 @@ function getAlimentosNoValidos(consumo: consumoAlimentos[], menuDia: Plato[], al
 
 }
 
-function esAlimentoValido(alimento: string, consumo: consumoAlimentos[], menuDia: Plato[], alimentosAyer: string[]): boolean {
+function esAlimentoValido(alimento: string, menuDia: Plato[], alimentosAyer: string[]): boolean {
 
-  let alimentos: Alimento[] = Alimentos.find().fetch();
   let nombreAlimentosAyer: string[] = [];
   let nutrientesDia: any[] = [];
+  let nutrientesMomento: any[] = [];
+  let alimentoCompleto: Alimento = Alimentos.findOne({ _id: alimento });
 
-  //Recojo los tipos de alimentos de los platos de HOY
+
   if (menuDia.length != 0) {
-    for (let i = 0; i < menuDia.length; i++) {
-      if (menuDia[i]._id != undefined) {
-        for (let j = 0; j < menuDia[i].alimentos.length; j++) {
-          let tiposalimentos = getNutrientesAlimento(menuDia[i].alimentos[j]);
-          nutrientesDia.push(tiposalimentos);
+
+    if (menuDia.length == 1 || menuDia.length == 3) { //Si hay sólo un plato en el momento quiere decir que no debo repetir en el momento
+      //Recojo los nutrientes de los platos del MOMENTO
+      for (let i = 0; i < menuDia[menuDia.length - 1].alimentos.length; i++) {
+        let nutrientes = getNutrientesAlimento(menuDia[menuDia.length - 1].alimentos[i]);
+        for (let j = 0; j < nutrientes.length; j++) {
+          nutrientesMomento.push(nutrientes[j]);
         }
       }
-    }
-    for (let i = 0; i < alimentos.length; i++) {
-      if (alimentos[i]._id == alimento) {
-        let nutriente: string = alimentos[i].nutrientes.toString();
-        for (let j = 0; j < nutrientesDia.length; j++) {
-          let nutrientesPlatoDia: string = nutrientesDia[j].toString();
-          if (nutriente == nutrientesPlatoDia) { //Tienen los mismos tipos de alimento
+
+      for (let i = 0; i < nutrientesMomento.length; i++) {
+        for (let j = 0; j < alimentoCompleto.nutrientes.length; j++) {
+          if (alimentoCompleto.nutrientes[j] == nutrientesMomento[i]) {
             return false;
           }
         }
       }
+
     }
+    //Recojo los nutrientes de los platos de HOY
+    for (let i = 0; i < menuDia.length; i++) {
+      if (menuDia[i]._id != undefined) {
+        for (let j = 0; j < menuDia[i].alimentos.length; j++) {
+          let nutrientes = getNutrientesAlimento(menuDia[i].alimentos[j]);
+          nutrientesDia.push(nutrientes);
+        }
+      }
+    }
+
+    let nutrientesAlimento: string = alimentoCompleto.nutrientes.toString();
+    for (let j = 0; j < nutrientesDia.length; j++) {
+      let nutrientesPlatoDia: string = nutrientesDia[j].toString();
+      if (nutrientesAlimento == nutrientesPlatoDia) { //Tienen los mismos nutrientes
+        return false;
+      }
+    }
+
+
   }
 
   //Recojo los alimentos que ya se han consumido AYER
@@ -423,6 +452,7 @@ function getPlatosValidos(momento: string, tipo: string, alimentosValidos: strin
   let tiposalimentosAyer = [];
   let alimentosMinimosDiarios = [];
   let platosNoValidos = [];
+  let ingredientesNoValidos = [];
   let familia: Familia = Familias.findOne({ _id: Meteor.userId });
 
   let condicionesDificultad: string[] = [];
@@ -444,16 +474,27 @@ function getPlatosValidos(momento: string, tipo: string, alimentosValidos: strin
   //Recojo los platos de la semana
   platosSemana = getNombrePlatosMenu(menuDia, menu);
 
-  //Los alimentos minimos se consumen de primero
-  if (alimentosMin.length != 0 && tipo == 'PRIMERO') {
-    alimentosValidos = alimentosMin;
-  }
 
   //No son válidos los platos que la familia ha marcado en sus gustos como negativo
 
   for (let i = 0; i < familia.gustos_platos.length; i++) {
-    if (familia.gustos_platos[i].valor == 0 || familia.gustos_platos[i].valor == -1) {
+    if (familia.gustos_platos[i].valor == -1) {
       platosNoValidos.push(familia.gustos_platos[i].id_plato);
+    }
+  }
+
+  //No son válidos los platos que lleven ingredientes que la familia ha marcado en sus gustos como negativo
+
+  for (let i = 0; i < familia.gustos_ingredientes.length; i++) {
+    if (familia.gustos_ingredientes[i].valor == -1) {
+      ingredientesNoValidos.push(familia.gustos_ingredientes[i].id_ingrediente);
+    }
+  }
+
+  //No son válidos los platos cuyos alimentos hayan sido marcados por la familia en sus gustos como negativo
+  for (let i = 0; i < familia.gustos_alimentos.length; i++) {
+    if (familia.gustos_alimentos[i].valor == -1) {
+      alimentosNoValidos.push(familia.gustos_alimentos[i].id_alimento);
     }
   }
 
@@ -490,6 +531,11 @@ function getPlatosValidos(momento: string, tipo: string, alimentosValidos: strin
           $nin: alimentosNoValidos
         }
       },
+      {
+        ingredientes: {
+          $nin: ingredientesNoValidos
+        }
+      },
       /*{
         alimentos:
         {
@@ -521,13 +567,13 @@ function getPlatosValidos(momento: string, tipo: string, alimentosValidos: strin
     platos.push({
       _id: undefined,
       nombre: undefined,
-      imagenUrl: undefined,
+      imagenUrl: "http://4a5on91qiys62e6d1d3mlkoa-wpengine.netdna-ssl.com/hiv-id-observations/wp-content/uploads/sites/2/2014/01/White_square_with_question_mark1.png",
       descripcion: undefined,
       dificultad: undefined, // BAJA, MEDIA, ALTA
       tiempo: undefined, // En minutos
       tipos: undefined, // PRIMERO, SEGUNDO
       momentos: undefined, // ALMUERZO, CENA
-      alimentos: alimentosValidos,
+      alimentos: alimentosMin,
       temporada: undefined, // PRIMAVERA, VERANO, OTOÑO INVIERNO
       ingredientes: undefined
     });
@@ -645,12 +691,19 @@ function getAlimentosUltimoDia(dietaUltimoDia: Dieta): string[] {
   return alimentosUltimoDia;
 }
 
-function getAlimentosMinimos(consumo: consumoAlimentos[]): string[] {
+function getAlimentosMinimos(consumo: consumoAlimentos[], menuDia: Plato[], alimentosAyer: string[]): string[] {
   let alimentosMin: string[] = [];
   for (let i = 0; i < consumo.length; i++) {
     if (consumo[i].minDiario != null && consumo[i].consumoDiario < consumo[i].minDiario) {
       alimentosMin.push(consumo[i].alimento);
+    } else if (consumo[i].minSemanal != null && consumo[i].consumoSemanal < consumo[i].minSemanal) {
+      if (esAlimentoValido(consumo[i].alimento, menuDia, alimentosAyer)) {
+        alimentosMin.push(consumo[i].alimento);
+      }
     }
+  }
+  if (alimentosMin.length == 0) {
+    alimentosMin.push('VERDURA');
   }
 
   return alimentosMin;

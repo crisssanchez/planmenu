@@ -66,7 +66,7 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
       });
     });
 
-  
+
   }
 
   getPlatosAlmuerzo(dia: number) {
@@ -131,6 +131,8 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
             nombre: result[i].nombre,
             imagenUrl:result[i].imagenUrl,
             alimentos:result[i].alimentos,
+            momentos: result[i].momentos,
+            tipos:result[i].tipos,
             ingredientes: result[i].ingredientes
           });
         }

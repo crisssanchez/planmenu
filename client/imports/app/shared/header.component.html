@@ -16,16 +16,12 @@
     </div>
     <div class="collapse navbar-collapse pull-right"
       id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li *ngIf="user"
-          routerLinkActive="active"><a [routerLink]="['menuSemanal']">Menú semanal</a></li>
-        <li *ngIf="user"
-          routerLinkActive="active"><a [routerLink]="['menus']">Mis menús</a></li>
+      <ul *ngIf="user" class="nav navbar-nav">
+        <li routerLinkActive="active"><a [routerLink]="['menuSemanal']">Menú semanal</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['menus']">Mis menús</a></li>
         <li routerLinkActive="active"><a [routerLink]="['platos']">Platos</a></li>
-        <li *ngIf="user"
-          routerLinkActive="active"><a [routerLink]="['carro']">Carro</a></li>
-        <li *ngIf="user"
-          routerLinkActive="active"><a [routerLink]="['usuario']">Usuario</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['carro']">Carro</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['usuario']">Usuario</a></li>
       </ul>
     </div>
   </div>
@@ -34,9 +30,14 @@
 
 <!--CABECERA TITULAR-->
 <div class="container page-header"></div>
-<div class="container"
+<div *ngIf="user" class="container"
   style="float:right;margin-right:15px;">
   <div class="row pull-right">
     <login-buttons></login-buttons>
   </div>
+</div>
+
+<!--CENTRO PÁGINA-->
+<div *ngIf="!user" class="centrar">
+  <login-buttons></login-buttons>
 </div>

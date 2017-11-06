@@ -18,12 +18,15 @@ import template from './carro.component.html';
 import { MapasService } from '../../services/mapas.service';
 import { MapsAPILoader } from '@agm/core';
 import { GoogleMapsAPIWrapper } from '@agm/core';
+import { InjectUser } from 'angular2-meteor-accounts-ui';
+import { Meteor } from 'meteor/meteor';
 
 declare var google: any;
 @Component({
   selector: 'carro',
   template
 })
+@InjectUser('user')
 export class CarroComponent {
 
   lat: number = 36.722742;
@@ -41,10 +44,8 @@ export class CarroComponent {
     this._ms.cargarMarcadores();
   }
 
-
-
-  menuId: string = '26022017-04032017';
-  //menuSub: Subscription;
+  user: Meteor.User;
+  menuId: string = Menus.findOne({owner:Meteor.userId()},{sort:{numero:-1}})._id;
   productosSub: Subscription;
   productos: Producto[];
 
@@ -63,7 +64,6 @@ export class CarroComponent {
   ngOnInit() {
 
     this.setCurrentPosition();
-
 
     if (this.productosSub) {
       this.productosSub.unsubscribe();
