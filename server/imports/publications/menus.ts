@@ -37,6 +37,7 @@ interface consumoAlimentos {
   minSemanal: number
 }
 
+
 Meteor.methods({
 
   cambiarPlatoMenu(menu: Menu, platoOrigen: Plato, dia: number, momento: string, platoDestino: Plato, motivoCambio: number, ingredientesMotivo: string[]) {
@@ -78,6 +79,7 @@ Meteor.methods({
 
   generarMenuSemana() {
 
+    let tiempoInicial = new Date().getTime();
     let menu: Menu = {
       _id: "",
       inicio: new Date(),
@@ -102,6 +104,8 @@ Meteor.methods({
     menu.inicio = dias[0];
     menu.fin = dias[6];
     menu._id = moment(menu.inicio).format('DDMMYYYY') + "-" + moment(menu.fin).format('DDMMYYYY');
+
+   let contadorUndefined = 0;
 
     //Recorro los días de la semana
     while (dias.length != 0) {
@@ -131,8 +135,8 @@ Meteor.methods({
 
         //Obtengo un plato aleatorio de entre los platos válidos (que cumplan las condiciones)
         plato = getPlatoAleatorioPonderado(getPlatosValidos(momento, tipo, alimentosValidos, alimentosNoValidos, alimentosMinimos, dietaDia, menu));
-
-        console.log(dia.getDay() + "(" + momento + "):" + plato.nombre + "[" + plato.alimentos + "]");
+    
+        //console.log(dia.getDate() + "(" + momento + "):" + plato.nombre + "[" + plato.alimentos + "]");
         if (plato != undefined) {
           consumirAlimentosPlato(plato, consumo);
         }
@@ -152,6 +156,9 @@ Meteor.methods({
           ingredientes: plato.ingredientes
         });
 
+        if(plato._id == undefined){
+          contadorUndefined ++;
+        }
         //Añado los ingredientes del plato del día al carro
 
         Meteor.call('addProductosMenuCarro', menu);
@@ -181,8 +188,14 @@ Meteor.methods({
       Menus.insert(menu);
     }
 
+    let now = new Date().getTime();
+    
+    console.log("Tiempo total algortimo: " + (now - tiempoInicial));
+    console.log("Nºplatos no encontrados: " + contadorUndefined + "/28");
+
     return menu;
-  }
+  
+}
 });
 
 
@@ -290,6 +303,7 @@ function getPlatoAleatorioPonderado(platosValidos: any[]): any {
   let platosValidosPonderados = platosLovePonderado.concat(platosLikePonderado, platosDestinoCambioPonderado, otrosPlatosPonderado, platosOrigenCambioPonderado);
 
   let platoAleatorioPonderado = getAleatorio(platosValidosPonderados);
+  
   return platoAleatorioPonderado;
 
 }
