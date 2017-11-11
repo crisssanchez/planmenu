@@ -40,16 +40,22 @@ export class CarroComponent {
   map;
   infowindow;
 
+  verPlatos;
+
   constructor(public _ms: MapasService, 
     // private _mapsAPILoader: MapsAPILoader
   ) {
-    this._ms.cargarMarcadores();
+    //this._ms.cargarMarcadores();
   }
 
   user: Meteor.User;
-  menuId: string = Menus.findOne({owner:Meteor.userId()},{sort:{numero:-1}})._id;
+  menuId: string;
   productosSub: Subscription;
   productos: Producto[];
+
+  ingredientes: Ingrediente[];
+  ingredienteSelected: Ingrediente;
+  ingedientesSub: Subscription;
 
   clickMapa(evento) {
 
@@ -67,18 +73,36 @@ export class CarroComponent {
 
     // this.setCurrentPosition();
 
+    this.ingedientesSub = MeteorObservable.subscribe('ingredientes').subscribe(() => {
+      this.ingredientes = Ingredientes.collection.find({}).fetch();
+    });
+   
+
     if (this.productosSub) {
       this.productosSub.unsubscribe();
     }
-    this.productosSub = MeteorObservable.subscribe('productosMenu', this.menuId).subscribe(() => {
+    this.productosSub = MeteorObservable.subscribe('productosMenu').subscribe(() => {
+      this.menuId = Menus.findOne({owner:Meteor.userId()},{sort:{numero:-1}})._id;
       MeteorObservable.autorun().subscribe(() => {
-        this.productos = Productos.find().fetch();
-      })
-    })
+        this.productos = Productos.find({ menu: this.menuId }, { sort: { orden: 1 } }).fetch();
+      });
+    });
   }
 
   addProducto(producto:string){
     MeteorObservable.call('addProductoCarro', this.menuId,producto).subscribe();
+
+  }
+
+  platosTxt(producto: Producto) {
+    let str = '';
+    let i = 0;
+    for (let p of producto.platos) {
+      if (i > 2)
+        str = str + p + ', ';
+      i++;
+    }
+    return str;
   }
 
   /*ngAfterViewInit() {
@@ -100,7 +124,11 @@ export class CarroComponent {
 
 
   ngOnDestroy() {
-    this.productosSub.unsubscribe();
+    if (this.productosSub)
+      this.productosSub.unsubscribe();
+
+    if (this.ingedientesSub)
+      this.ingedientesSub.unsubscribe();
   }
 
   private setCurrentPosition() {

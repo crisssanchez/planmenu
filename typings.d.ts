@@ -1,4 +1,5 @@
 /// <reference types="zone.js" />
+/// <reference types="@types/meteor" />
 /// <reference path="meteor.d.ts" />
 
 declare module "*.html" {

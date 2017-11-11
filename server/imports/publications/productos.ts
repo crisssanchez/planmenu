@@ -12,8 +12,21 @@ Meteor.publish('producto', function (_id: string) {
   return Productos.find({ _id: _id });
 });
 
-Meteor.publish('productosMenu', function (menu_id: string) {
-  return Productos.find({ menu: menu_id }, { sort: { nombre: 1 } });
+Meteor.publishComposite('productosMenu', function(): PublishCompositeConfig<Menu> {
+  return {
+    find: () => {
+      return Menus.collection.find({owner:Meteor.userId()},{sort:{numero:-1}});
+    },
+    children: [
+      <PublishCompositeConfig1<Menu,Producto>>{
+        find: (menu) => {
+          return Productos.collection.find({ menu: menu._id }, { sort: { nombre: 1 } });
+        }
+      }
+    ]
+  };
+
+  // return Productos.find({ menu: menu_id }, { sort: { nombre: 1 } });
 });
 
 Meteor.methods({
@@ -24,13 +37,13 @@ Meteor.methods({
 
     let platosMenu: Plato[] = getPlatosMenu(menu);
 
+    let orden = 0;
     for (let i = 0; i < platosMenu.length; i++) { //Por cada plato
       let plato: Plato = platosMenu[i];
       if (platosMenu[i]._id != undefined) {
         let ingredientes: string[] = plato.ingredientes;
 
         for (let j = 0; j < ingredientes.length; j++) { //por cada ingrediente del plato
-
           let platosProducto: string[] = [];
           if (Productos.findOne({ menu: menu._id, nombre: ingredientes[j] }) != undefined) { //Si ya está en productos actualizo el array de platos
             platosProducto = Productos.findOne({ menu: menu._id, nombre: ingredientes[j] }).platos;
@@ -41,8 +54,10 @@ Meteor.methods({
 
           } else { //Si no está en productos lo añado
             platosProducto.push(plato.nombre);
+            orden++;
             Productos.insert({
               menu: menu._id,
+              orden: orden,
               nombre: ingredientes[j],
               platos: platosProducto,
               activo: true
@@ -54,8 +69,12 @@ Meteor.methods({
     }
   },
 
+  vaciarCarro(menu: Menu) {
+    Productos.collection.remove({menu: menu._id});
+  },
+
   addProductoCarro(menuId: string, producto:string){
-    Productos.insert({menu:menuId,nombre: producto,activo:true});
+    Productos.insert({menu:menuId,nombre: producto,activo:true, orden: -1});
   },
 
   setActivoProductoMenu(menuId: string, producto: Producto, valor: boolean) {

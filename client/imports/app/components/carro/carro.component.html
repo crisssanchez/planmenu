@@ -8,72 +8,87 @@
         type="search"
         name="Añadir"
         placeholder="Añadir..."
+        [typeahead]="ingredientes"
+        typeaheadOptionField="nombre"
+        [(ngModel)]="ingredienteSelected"      
         #cadenaTexto>
       <span class="input-group-btn">
-          <div class="btn-group dropup">
-            <button class="btn btn-success" type="button" (click)="addProducto(cadenaTexto.value)">
-              <span class="fa fa-plus" style="color:white;"></span>
-      </button>
+        <div class="btn-group dropup">
+          <button class="btn btn-success"
+            type="button"
+            (click)="addProducto(cadenaTexto.value); cadenaTexto.value = ''">
+            <span class="fa fa-plus"
+              style="color:white;"></span>
+          </button>
       </span>
+      </div>
+
     </div>
+  </div>
+
+
+  <div class="col-md-7">
+    <table class="table">
+
+      <tr>
+
+      </tr>
+
+      <tr *ngFor="let producto of productos">
+        <td>
+          <a *ngIf="producto.activo"
+            class="button btn-xs pull-left "
+            role="button"
+            (click)="setActivo(producto, false)">
+            <i class="fa fa-square-o"> </i>
+          </a>
+          <a *ngIf="!producto.activo"
+            class="button btn-xs pull-left "
+            role="button"
+            (click)="setActivo(producto,true)">
+            <i class="fa fa-check-square-o"> </i>
+          </a>
+        </td>
+
+        <td *ngIf="producto.activo == true"
+          style="text-decoration:none; cursor: pointer;"
+          (click)="setActivo(producto, false)">
+          {{ producto.nombre }}
+        </td>
+        <td *ngIf="producto.activo == false"
+          style="text-decoration:line-through;  cursor: pointer;"
+          (click)="setActivo(producto,true)">
+          {{ producto.nombre }}
+        </td>
+        <td>
+          <div style="display:inline"
+            *ngFor="let plato of producto.platos; let i = index">
+            <span class="label label-default"
+              *ngIf="i<=2">
+              {{ plato }}
+            </span>
+            <span class="label label-default"
+              *ngIf="i===3"
+              [tooltip]="platosTxt(producto)">
+              ...
+            </span>
+
+          </div>
+        </td>
+        <td style="float:right">
+          <a class="button"
+            role="button"
+            (click)="removeProductoMenu(producto)">
+            <i class="fa fa-trash-o fa-lg"> </i>
+          </a>
+        </td>
+      </tr>
+    </table>
 
   </div>
-</div>
 
-
-<div class="col-md-5">
-  <table>
-
-    <tr>
-  
-    </tr>
-  
-    <tr *ngFor="let producto of productos">
-      <td>
-        <a *ngIf="producto.activo"
-          class="button btn-xs pull-left "
-          role="button"
-          (click)="setActivo(producto, false)">
-                    <i class="fa fa-square-o">  </i>
-                  </a>
-        <a *ngIf="!producto.activo"
-          class="button btn-xs pull-left "
-          role="button"
-          (click)="setActivo(producto,true)">
-                        <i  class="fa fa-check-square-o">  </i>
-                      </a>
-      </td>
-     
-      <td *ngIf="producto.activo == true"
-        style="text-decoration:none;">
-        {{ producto.nombre }}
-      </td>
-      <td *ngIf="producto.activo == false"
-        style="text-decoration:line-through;">
-        {{ producto.nombre }}
-      </td>
-      <td>(
-        <div style="display:inline"
-          *ngFor="let plato of producto.platos; let i = index">
-          <div style="display:inline"
-            *ngIf="i != 0">,</div>
-          {{ plato }}
-        </div> )
-      </td>
-      <td style="float:right">
-        <a class="button"
-          role="button"
-          (click)="removeProductoMenu(producto)">
-                    <i class="fa fa-trash-o fa-lg">  </i>
-                  </a>
-      </td>
-    </tr>
-  </table>
-
-</div>
-
-<div class="col-md-2">
-   <!-- <agm-map [latitude]="lat"
+  <!-- <div class="col-md-2">
+   <agm-map [latitude]="lat"
     [longitude]="lng"
     [zoom]="zoom">
     <agm-marker *ngFor="let marcador of _ms.marcadores "
@@ -86,7 +101,6 @@
         <p *ngIf="marcador.desc">{{ marcador.desc }}</p>
       </agm-info-window>
     </agm-marker>
-  </agm-map>  -->
+  </agm-map> 
  
-</div>
- 
+</div> -->

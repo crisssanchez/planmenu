@@ -167,7 +167,7 @@ Meteor.methods({
           contadorUndefined++;
         }
         //Añado los ingredientes del plato del día al carro
-
+        Meteor.call('vaciarCarro', menu);
         Meteor.call('addProductosMenuCarro', menu);
       }
 
