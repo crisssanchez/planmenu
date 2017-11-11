@@ -10,9 +10,10 @@ import { CarroComponent } from './components/carro/carro.component';
 import { Meteor } from 'meteor/meteor';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { FamiliaResolve } from './services/familia-resolve.service';
+import { LoginComponent } from './components/login.component';
 
 const APP_ROUTES: Routes = [
-  { path: '', component: MenuSemanalComponent, canActivate:['canActivateForLoggedIn'] },
+  { path: '', component: LoginComponent },
   { path: 'usuario', component: UsuarioComponent, canActivate:['canActivateForLoggedIn']},
   { path: 'menuSemanal', component: MenuSemanalComponent, canActivate:['canActivateForLoggedIn'], resolve: { fam: FamiliaResolve } },
   { path: 'menu/:_id', component: MenuComponent, canActivate:['canActivateForLoggedIn'] },

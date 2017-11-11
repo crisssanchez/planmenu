@@ -16,62 +16,74 @@
         (keyup)="buscarPlato(cadenaTexto.value)"
         #cadenaTexto>
       <span class="input-group-btn">
-            <div class="btn-group dropup">
-              <button class="btn btn-success" type="button" (click)="buscarPlato(cadenaTexto.value)">
-                <span class="fa fa-search" style="color:white;"></span>
-      </button>
+        <div class="btn-group dropup">
+          <button class="btn btn-success"
+            type="button"
+            (click)="buscarPlato(cadenaTexto.value)">
+            <span class="fa fa-search"
+              style="color:white;"></span>
+          </button>
       </span>
-      <span class="input-group-btn" *ngIf="user">
-                  <a [routerLink]="['/nuevoPlato']" class="btn btn-success">
-                    <span class="fa fa-plus" style="color:white;"></span>
-      </a>
+      <span class="input-group-btn"
+        *ngIf="user">
+        <a [routerLink]="['/nuevoPlato']"
+          class="btn btn-success">
+          <span class="fa fa-plus"
+            style="color:white;"></span>
+        </a>
       </span>
+      </div>
+
     </div>
 
   </div>
-
-</div>
-<!--/page-header-->
+  <!--/page-header-->
 </div>
 <!--/container-->
 
 
 <div class="container col-xs-7">
   <div class="row">
-    <div class="col-xs-7 col-sm-2 col-md-1"
-      *ngFor="let plato of platos | async">
-      <div class="thumbnail">
-        <div style="height: 150px; width: 100%; background-position: center; background-size: cover;"
-          [style.backgroundImage]="'url(' + plato.imagenUrl + ')'">
+    <ng-container *ngFor="let plato of platos | async; let i = index">
+      <div class="col-xs-7 col-sm-2 col-md-1">
+        <div class="thumbnail">
+          <div style="height: 150px; width: 100%; background-position: center; background-size: cover;"
+            [style.backgroundImage]="'url(' + plato.imagenUrl + ')'">
+          </div>
+          <div class="caption">
+            <h4>
+              <a [routerLink]="['/recetaPlato', plato._id]"
+                style="display:inline;">{{plato.nombre}}</a>
+            </h4>
+            <span class="label label-primary">{{plato.tiempo}} min</span>
+            <span class="label label-success">{{plato.dificultad}}</span>
+            <span class="label label-warning">{{plato.tipos}}</span>
+            <span class="label label-info">{{plato.momentos}}</span>
+
+            <span class="label label-danger"
+              *ngFor="let alimento of plato.alimentos">{{alimento}}</span>
+
+            <span class="label label-default">{{temporadaText(plato.temporada)}}</span>
+            <hr>
+            <a href="#"
+              class="btn btn-default btn-xs pull-right"
+              role="button">
+              <i class="fa fa-edit"></i>
+            </a>
+
+            <a [routerLink]="['/recetaPlato', plato._id]"
+              class="btn btn-info btn-xs"
+              role="button">Receta</a>
+            <a href="#"
+              class="btn btn-default btn-xs"
+              role="button">Eliminar</a>
+          </div>
         </div>
-        <div class="caption">
-          <h4><a [routerLink]="['/recetaPlato', plato._id]"
-              style="display:inline;">{{plato.nombre}}</a></h4>
-          <span class="label label-primary">{{plato.tiempo}} min</span>
-          <span class="label label-success">{{plato.dificultad}}</span>
-          <span class="label label-warning">{{plato.tipos}}</span>
-          <span class="label label-info">{{plato.momentos}}</span>
 
-          <span class="label label-danger"
-            *ngFor="let alimento of plato.alimentos">{{alimento}}</span>
-
-          <span class="label label-default">{{plato.temporada}}</span>
-          <hr>
-          <a href="#"
-            class="btn btn-default btn-xs pull-right"
-            role="button">
-                  <i class="fa fa-edit"></i>
-                </a>
-
-          <a [routerLink]="['/recetaPlato', plato._id]"
-            class="btn btn-info btn-xs"
-            role="button">Receta</a>
-          <a href="#"
-            class="btn btn-default btn-xs"
-            role="button">Eliminar</a>
-        </div>
       </div>
-    </div>
+      <div class="clearfix"
+        *ngIf="(i + 1) % 7 === 0"></div>
+    </ng-container>
   </div>
   <!--/row-->
 </div>

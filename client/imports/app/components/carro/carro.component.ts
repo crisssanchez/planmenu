@@ -16,8 +16,8 @@ import { Menu, Dieta } from '../../../../../both/models/menu.model';
 
 import template from './carro.component.html';
 import { MapasService } from '../../services/mapas.service';
-import { MapsAPILoader } from '@agm/core';
-import { GoogleMapsAPIWrapper } from '@agm/core';
+// import { MapsAPILoader } from '@agm/core';
+// import { GoogleMapsAPIWrapper } from '@agm/core';
 import { InjectUser } from 'angular2-meteor-accounts-ui';
 import { Meteor } from 'meteor/meteor';
 
@@ -34,13 +34,15 @@ export class CarroComponent {
   zoom: number = 12;
   maps: Marcador;
 
-  @ViewChild('agm')
-  public mapRef: ElementRef;
+  // @ViewChild('agm')
+  // public mapRef: ElementRef;
 
   map;
   infowindow;
 
-  constructor(public _ms: MapasService, private _mapsAPILoader: MapsAPILoader) {
+  constructor(public _ms: MapasService, 
+    // private _mapsAPILoader: MapsAPILoader
+  ) {
     this._ms.cargarMarcadores();
   }
 
@@ -63,7 +65,7 @@ export class CarroComponent {
 
   ngOnInit() {
 
-    this.setCurrentPosition();
+    // this.setCurrentPosition();
 
     if (this.productosSub) {
       this.productosSub.unsubscribe();

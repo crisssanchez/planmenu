@@ -32,18 +32,25 @@ export class PlatosComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(){
-    this.platos = Platos.find({}).zone();
+    this.platos = Platos.find({}, { limit: 14 }).zone();
     this.platosSub = MeteorObservable.subscribe('platos').subscribe();
   }
 
   buscarPlato( cadena:string ){
-    console.log(cadena);
+    // console.log(cadena);
     this.platos = Platos.find({ $or: [ {"nombre": { $regex: cadena, $options: "i"}},
                                       {"dificultad": {$regex: cadena, $options: "i"}},
                                       {"tiempo": Number(cadena)},
                                       {"tipos":{$regex: cadena, $options: "i"}},
                                       {"momentos":{$regex: cadena, $options: "i"}},
-                                      {"alimentos":{$regex: cadena, $options: "i"}}]}).zone();
+                                      {"alimentos":{$regex: cadena, $options: "i"}}]}, { limit: 14 }).zone();
+  }
+
+  temporadaText(temporada) {
+    if (temporada.length === 4 ) {
+      return 'Todo el año';
+    }
+    return temporada;
   }
 
 

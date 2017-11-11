@@ -47,31 +47,38 @@ Meteor.methods({
     pushValue[posField] = platoDestino;
 
     let popValue = {};
-    popValue[posField] = { _id: platoOrigen._id };
-    Menus.update({ _id: menu._id, ['dieta.' + dia + '.' + momento + '._id']: platoOrigen._id },
+    let platoOrigenId = null;
+    if (platoOrigen._id) {
+      platoOrigenId = platoOrigen._id;
+    }
+    popValue[posField] = { _id: platoOrigenId };
+    Menus.update({ _id: menu._id, ['dieta.' + dia + '.' + momento + '._id']: platoOrigenId },
       {
         $set: {
           ['dieta.' + dia + '.' + momento + '.$']: platoDestino
         }
       });
 
-    Familias.update(
-      { _id: Meteor.userId },
-      {
-        $addToSet: {
-          cambios_platos: { id_origen: platoOrigen._id, nombre_origen: platoOrigen.nombre, id_destino: platoDestino._id, nombre_destino: platoDestino.nombre, motivo_cambio: { motivo: motivoCambio, ingredientes: ingredientesMotivo } }
-        }
-      });
+    if (platoOrigenId !== null) {
 
-    if (motivoCambio == -1) {
       Familias.update(
         { _id: Meteor.userId },
         {
           $addToSet: {
-            gustos_platos: { id_plato: platoOrigen._id, nombre_plato: platoOrigen.nombre, valor: motivoCambio }
+            cambios_platos: { id_origen: platoOrigen._id, nombre_origen: platoOrigen.nombre, id_destino: platoDestino._id, nombre_destino: platoDestino.nombre, motivo_cambio: { motivo: motivoCambio, ingredientes: ingredientesMotivo } }
           }
         });
 
+      if (motivoCambio == -1) {
+        Familias.update(
+          { _id: Meteor.userId },
+          {
+            $addToSet: {
+              gustos_platos: { id_plato: platoOrigen._id, nombre_plato: platoOrigen.nombre, valor: motivoCambio }
+            }
+          });
+
+      }
     }
 
 
@@ -105,7 +112,7 @@ Meteor.methods({
     menu.fin = dias[6];
     menu._id = moment(menu.inicio).format('DDMMYYYY') + "-" + moment(menu.fin).format('DDMMYYYY');
 
-   let contadorUndefined = 0;
+    let contadorUndefined = 0;
 
     //Recorro los días de la semana
     while (dias.length != 0) {
@@ -135,7 +142,7 @@ Meteor.methods({
 
         //Obtengo un plato aleatorio de entre los platos válidos (que cumplan las condiciones)
         plato = getPlatoAleatorioPonderado(getPlatosValidos(momento, tipo, alimentosValidos, alimentosNoValidos, alimentosMinimos, dietaDia, menu));
-    
+
         //console.log(dia.getDate() + "(" + momento + "):" + plato.nombre + "[" + plato.alimentos + "]");
         if (plato != undefined) {
           consumirAlimentosPlato(plato, consumo);
@@ -156,8 +163,8 @@ Meteor.methods({
           ingredientes: plato.ingredientes
         });
 
-        if(plato._id == undefined){
-          contadorUndefined ++;
+        if (plato._id == undefined) {
+          contadorUndefined++;
         }
         //Añado los ingredientes del plato del día al carro
 
@@ -183,19 +190,19 @@ Meteor.methods({
 
     //Guardar menú   
     if (Menus.findOne({ _id: menu._id })) {
-      Menus.update({_id:menu._id},{$set:{dieta:menu.dieta}});
+      Menus.update({ _id: menu._id }, { $set: { dieta: menu.dieta } });
     } else {
       Menus.insert(menu);
     }
 
     let now = new Date().getTime();
-    
+
     console.log("Tiempo total algortimo: " + (now - tiempoInicial));
     console.log("Nºplatos no encontrados: " + contadorUndefined + "/28");
 
     return menu;
-  
-}
+
+  }
 });
 
 
@@ -303,7 +310,7 @@ function getPlatoAleatorioPonderado(platosValidos: any[]): any {
   let platosValidosPonderados = platosLovePonderado.concat(platosLikePonderado, platosDestinoCambioPonderado, otrosPlatosPonderado, platosOrigenCambioPonderado);
 
   let platoAleatorioPonderado = getAleatorio(platosValidosPonderados);
-  
+
   return platoAleatorioPonderado;
 
 }
@@ -529,9 +536,9 @@ function getPlatosValidos(momento: string, tipo: string, alimentosValidos: strin
       {
         $and: [{
           _id:
-          {
-            $nin: platosSemana
-          }
+            {
+              $nin: platosSemana
+            }
         }, {
           _id: {
             $nin: platosNoValidos
@@ -541,9 +548,9 @@ function getPlatosValidos(momento: string, tipo: string, alimentosValidos: strin
       },
       {
         alimentos:
-        {
-          $nin: alimentosNoValidos
-        }
+          {
+            $nin: alimentosNoValidos
+          }
       },
       {
         ingredientes: {
@@ -558,15 +565,15 @@ function getPlatosValidos(momento: string, tipo: string, alimentosValidos: strin
       },*/
       {
         momentos:
-        {
-          $in: [momento]
-        }
+          {
+            $in: [momento]
+          }
       },
       {
         tipos:
-        {
-          $in: [tipo]
-        }
+          {
+            $in: [tipo]
+          }
       },
       {
         tiempo: { $lte: familia.tiempo }
@@ -576,7 +583,7 @@ function getPlatosValidos(momento: string, tipo: string, alimentosValidos: strin
       }
     ]
   }).fetch();
-
+  
   if (platos.length == 0) {
     platos.push({
       _id: undefined,
@@ -585,8 +592,8 @@ function getPlatosValidos(momento: string, tipo: string, alimentosValidos: strin
       descripcion: undefined,
       dificultad: undefined, // BAJA, MEDIA, ALTA
       tiempo: undefined, // En minutos
-      tipos: undefined, // PRIMERO, SEGUNDO
-      momentos: undefined, // ALMUERZO, CENA
+      tipos: [tipo], // PRIMERO, SEGUNDO
+      momentos: [momento], // ALMUERZO, CENA
       alimentos: alimentosMin,
       temporada: undefined, // PRIMAVERA, VERANO, OTOÑO INVIERNO
       ingredientes: undefined

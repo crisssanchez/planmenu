@@ -1,4 +1,4 @@
-export const SEMANA = ['LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO','DOMINGO'];
+export const SEMANA = ['DOMINGO','LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO'];
 
 export const enum TEMPORADA {
   VERANO,

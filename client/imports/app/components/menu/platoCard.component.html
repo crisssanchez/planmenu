@@ -1,0 +1,136 @@
+<div class="plato">
+  <div class="thumbnail">
+    <div class="caption">
+      <div style="height: 150px; width: 100%; background-position: center; background-size: cover;"
+        [style.backgroundImage]="'url(' + plato.imagenUrl + ')'">
+      </div>
+      <div *ngIf="plato.nombre != undefined">
+        <h5 style="height: 50px; overflow: hidden;">
+          <a [routerLink]="['/recetaPlato', plato._id]"
+            style="display:inline;">{{plato.nombre}}</a>
+        </h5>
+      </div>
+      <div *ngIf="plato.nombre == undefined">
+        <h5 style="height: 50px; overflow: hidden;">Indefinido</h5>
+      </div>
+      <a class="btn btn-default btn-xs pull-right"
+        data-toggle="modal"
+        (click)="getPlatosAlternativos(); cambiarPlatoModal.show();"
+        role="button">
+        <i class="fa fa-retweet"></i>
+      </a>
+    </div>
+
+    <div *ngIf="plato.nombre != undefined" style="position: relative; top: -8px; left: 8px; width: 78px;">
+      <a class="btn btn-default btn-xs"
+        (click)="setGustoPlato(1)"
+        [class.active]="esGustoPlato(1)"
+        role="button">
+        <i class="fa fa-heart-o"></i>
+      </a>
+      <a class="btn btn-default btn-xs"
+        (click)="setGustoPlato(0)"
+        [class.active]="esGustoPlato(0)"
+        role="button">
+        <i class="fa fa-thumbs-o-up"></i>
+      </a>
+      <a class="btn btn-default btn-xs"
+        (click)="setGustoPlato(-1)"
+        [class.active]="esGustoPlato(-1)"
+        role="button">
+        <i class="fa fa-thumbs-o-down"></i>
+      </a>
+    </div>
+    <div *ngIf="plato.nombre == undefined">
+      <br>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade"
+  bsModal
+  #cambiarPlatoModal="bs-modal"
+  tabindex="-1"
+  role="dialog">
+  <div class="modal-dialog modal-lg"
+    role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button"
+          class="close"
+          (click)="cambiarPlatoModal.hide();clearDialog();">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title"
+          id="myModalLabel">Cambiar plato</h4>
+      </div>
+      <div
+        class="modal-body">
+
+        <h5 *ngIf="plato.nombre" style="display:inline;">Plato: </h5> <span *ngIf="plato.nombre">{{plato.nombre}}</span>
+
+        <h5 *ngIf="plato.nombre">Motivo:</h5>
+
+        <div class="btn-group" *ngIf="plato.nombre">
+
+          <button type="button"
+            class="btn btn-default"
+            (click)="setMotivo(1);show = false;"
+            [class.active]="esMotivo(1)">No me apetece</button>
+
+          <button type="button"
+            class="btn btn-default"
+            (click)="setMotivo(-1);show = false;"
+            [class.active]="esMotivo(-1)">No me gusta el plato</button>
+
+          <button type="button"
+            class="btn btn-default"
+            (click)="setMotivo(0);show = true;"
+            [class.active]="esMotivo(0)">No me gusta alguno de los ingredientes</button>
+
+
+        </div>
+
+        <div *ngIf="show && plato.nombre">
+          <h5>Ingredientes:</h5>
+          <div class="btn-group"
+            *ngFor="let ing of plato.ingredientes; let i = index">
+
+            <label [for]="i" class="btn btn-default">{{ing}}
+              <input type="checkbox"
+                [id]="i"
+                class="badgebox"
+                (change)="setMotivoIngredientes(ing)">
+            </label>
+          </div>
+
+
+        </div>
+
+        <h5>Alternativas:</h5>
+
+        <div class="row">
+          <div class="col-md-2"
+            *ngFor="let pAlternativo of alternativas">
+            <button class="thumbnail"
+              (click)="setPlatoSeleccionado(pAlternativo)"
+              [class.active]="esPlatoSeleccionado(pAlternativo)"
+              role="button">
+              <div class="caption">
+                <div style="height: 200px; width:210px; background-position: center; background-size: cover;"
+                  [style.backgroundImage]="'url(' + pAlternativo.imagenUrl + ')'"></div>
+                {{ pAlternativo.nombre }}
+              </div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button"
+          class="btn btn-danger"
+          (click)="guardarCambioPlato(dia, 'almuerzo')">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
