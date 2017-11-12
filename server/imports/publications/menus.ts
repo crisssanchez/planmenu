@@ -95,13 +95,17 @@ Meteor.methods({
       numero: Menus.find({ owner: Meteor.userId }).fetch().length + 1,
       owner: Meteor.userId()
     };
+    let familia: Familia = Familias.collection.findOne(Meteor.userId());
     let menuAnterior = getMenuAnterior();
     let alimentos: Alimento[] = Alimentos.find().fetch();
+    let alimentosFamilia = familia.alimentos;
     let consumo: consumoAlimentos[];
     let semana: Date[] = [];
 
     semana = inicializarSemana();
-    consumo = inicializarConsumo(alimentos);
+    consumo = inicializarConsumo(alimentosFamilia);
+
+    // console.log(consumo);
 
     //Copia de semana para ir recorriendo los días
     let dias: Date[] = [];
@@ -179,7 +183,7 @@ Meteor.methods({
       });
 
       //Inicializo el consumo diario
-      consumo = inicializarConsumo(alimentos, consumo);
+      consumo = inicializarConsumo(alimentosFamilia, consumo);
 
       //Siguiente día
       dias.shift();
@@ -222,7 +226,7 @@ function inicializarSemana(): Date[] {
   return semana;
 }
 
-function inicializarConsumo(alimentos: Alimento[], consumoDia?: consumoAlimentos[]): consumoAlimentos[] {
+function inicializarConsumo(alimentos, consumoDia?: consumoAlimentos[]): consumoAlimentos[] {
 
   let consumo: consumoAlimentos[] = [];
   let consumoDiario: number;

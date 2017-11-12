@@ -5,7 +5,7 @@
     <form action="actualizarUsuario()"
       class="form-horizontal">
       <div class="row">
-        
+
         <div class="col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -83,7 +83,7 @@
                 <label>
                   <input type="radio"
                     name="aviso"
-                    [value] = 0
+                    [value]=0
                     id="aviso"
                     [(ngModel)]="usuario.aviso">Semanal</label>
               </div>
@@ -91,7 +91,7 @@
                 <label>
                   <input type="radio"
                     name="aviso"
-                    [value] = 1
+                    [value]=1
                     id="aviso"
                     [(ngModel)]="usuario.aviso">Diario</label>
               </div>
@@ -138,7 +138,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-xs-2">Tiempo elaboración platos:</label>
+            <label class="col-xs-2">Tiempo máx. elaboración platos:</label>
             <div class="col-xs-5">
               <input type="number"
                 style="width:10%;"
@@ -157,55 +157,82 @@
         </div>
         <div class="panel-body">
 
-          <div *ngFor="let alimento of alimentos | async"
-            class="row">
+          <div *ngFor="let alimento of usuario.alimentos"
+            class="row" style="padding-left: 10px;">
 
-            <div class="col-lg-3">
-
-              <div class="form-group">
-                <label class="col-xs-2">{{ alimento._id }}:</label>
-                <div class="col-xs-5">
-                  <div class="btn-group"
-                    role="group"
-                    aria-label="...">
-                    <button type="button"
-                      (click)="cambiarGustos(alimento._id, 1)"
-                      [class.active]="gustoAlimento(alimento._id, 1)"
-                      class="btn btn-default">
-                      <i class="fa fa-heart-o"
-                        aria-hidden="true"></i>
-                    </button>
-                    <button type="button"
-                      (click)="cambiarGustos(alimento._id,0)"
-                      [class.active]="gustoAlimento(alimento._id, 0)"
-                      class="btn btn-default">
-                      <i class="fa fa-thumbs-o-up"
-                        aria-hidden="true"></i>
-                    </button>
-                    <button type="button"
-                      (click)="cambiarGustos(alimento._id,-1)"
-                      [class.active]="gustoAlimento(alimento._id, -1)"
-                      class="btn btn-default">
-                      <i class="fa fa-thumbs-o-down"
-                        aria-hidden="true"></i>
-                    </button>
-                  </div>
-                </div>
+            <div class="form-group">
+              <div class="col-xs-1">
+                <label>{{ alimento._id }}:</label>
               </div>
-            </div>
+              <div class="col-xs-6">
+                <div class="btn-group"
+                  role="group"
+                  aria-label="...">
+                  <button type="button"
+                    (click)="cambiarGustos(alimento._id, 1)"
+                    [class.active]="gustoAlimento(alimento._id, 1)"
+                    class="btn btn-default">
+                    <i class="fa fa-heart-o"
+                      aria-hidden="true"></i>
+                  </button>
+                  <button type="button"
+                    (click)="cambiarGustos(alimento._id,0)"
+                    [class.active]="gustoAlimento(alimento._id, 0)"
+                    class="btn btn-default">
+                    <i class="fa fa-thumbs-o-up"
+                      aria-hidden="true"></i>
+                  </button>
+                  <button type="button"
+                    (click)="cambiarGustos(alimento._id,-1)"
+                    [class.active]="gustoAlimento(alimento._id, -1)"
+                    class="btn btn-default">
+                    <i class="fa fa-thumbs-o-down"
+                      aria-hidden="true"></i>
+                  </button>
+                </div>
+                <span *ngIf="alimento.minSem !== undefined"
+                  style="margin-left: 10px;">
+                  Mín. semanal
+                  <input class="form-control"
+                    name="minSem{{alimento._id}}"
+                    [(ngModel)]="alimento.minSem"
+                    style="display: inline-block; width: 60px;"
+                    type="number" /> Máx. semanal
+                  <input class="form-control"
+                    name="maxSem{{alimento._id}}"
+                    style="display: inline-block; width: 60px;"
+                    [(ngModel)]="alimento.maxSem"
+                    type="number" />
+                </span>
 
-            <div class="col-lg-4">
+                <span *ngIf="alimento.minDia !== undefined"
+                  style="margin-left: 10px;">
+                  Mínimo diario
+                  <input class="form-control"
+                    name="minDia{{alimento._id}}"
+                    style="display: inline-block; width: 60px;"
+                    [(ngModel)]="alimento.minDia"
+                    type="number" />
+                </span>
+
+                <span *ngIf="alimento.minSem > alimento.maxSem" style="color: red;">
+                  El mínimo semanal no puede ser mayor que el máximo
+                </span>
+              </div>
+
 
 
             </div>
           </div>
+
         </div>
       </div>
-
-      <button type="submit"
-        (click)="guardarUsuario()"
-        class="btn btn-danger">Guardar</button>
-
-    </form>
   </div>
+
+  <button type="submit"
+    (click)="guardarUsuario()"
+    class="btn btn-danger">Guardar</button>
+
+  </form>
+</div>
 </div>

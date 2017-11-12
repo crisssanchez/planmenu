@@ -26,7 +26,6 @@ export class UsuarioComponent {
   user: Meteor.User;
   usuario: Familia;
   usuarioSub: Subscription;
-  alimentos: Observable<Alimento[]>;
   alimentosSub: Subscription;
 
   idPlato: string;
@@ -43,13 +42,13 @@ export class UsuarioComponent {
       });
     });
 
-    if (this.alimentosSub) {
-      this.alimentosSub.unsubscribe();
-    }
-    this.alimentos = Alimentos.find({}).zone();
-    
-    
-    this.alimentosSub = MeteorObservable.subscribe('alimentos').subscribe();
+    // if (this.alimentosSub) {
+    //   this.alimentosSub.unsubscribe();
+    // }
+
+
+    // this.alimentosSub = MeteorObservable.subscribe('alimentos').subscribe();
+    // this.alimentos = Alimentos.find({}).zone();
 
   }
 
@@ -71,7 +70,7 @@ export class UsuarioComponent {
   }
 
   gustoAlimento(alimentoId: string, valor: number) {
-    if(this.usuario.gustos_alimentos === undefined){
+    if (this.usuario.gustos_alimentos === undefined) {
       this.usuario.gustos_alimentos = [];
     }
     for (let i = 0; i < this.usuario.gustos_alimentos.length; i++) {
@@ -82,11 +81,18 @@ export class UsuarioComponent {
   }
 
   guardarUsuario() {
-    Meteor.call('updateFamilia', this.usuario);
+    let valid = true;
+    for (let alimento of this.usuario.alimentos) {
+      if (alimento.minSem != undefined && alimento.maxSem !== undefined && alimento.minSem > alimento.maxSem) {
+        valid = false;
+      }
+    }
+
+    if (valid)
+      Meteor.call('updateFamilia', this.usuario);
   }
 
   ngOnDestroy() {
-    this.alimentosSub.unsubscribe();
     this.usuarioSub.unsubscribe();
   }
 

@@ -34,6 +34,13 @@ export interface Familia extends CollectionObject {
       ingredientes?: string[]
     }
   }[],
+  alimentos: {
+    _id: string,
+    minDia?:number,
+    maxDia?:number,
+    minSem?:number,
+    maxSem?:number
+  }[],
   aviso: number; //(0 semanal, 1 diario)
 
 };

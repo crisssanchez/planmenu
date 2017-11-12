@@ -12,7 +12,7 @@ Meteor.publish('familia',() => {
 Meteor.methods({
 
   updateFamilia(usuario: Familia){
-    Familias.update({ _id: usuario._id }, {$set:{ nombre: usuario.nombre, apellidos: usuario.apellidos, email: usuario.email, comienzo: usuario.comienzo, miembros: usuario.miembros, dificultad: usuario.dificultad, tiempo: usuario.tiempo, gustos_alimentos: usuario.gustos_alimentos, aviso:usuario.aviso }});
+    Familias.update({ _id: usuario._id }, {$set:{ nombre: usuario.nombre, apellidos: usuario.apellidos, email: usuario.email, comienzo: usuario.comienzo, miembros: usuario.miembros, dificultad: usuario.dificultad, tiempo: usuario.tiempo, gustos_alimentos: usuario.gustos_alimentos, aviso:usuario.aviso, alimentos: usuario.alimentos }});
   },
 
   setGustoPlato(plato:Plato, valor:number){

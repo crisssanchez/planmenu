@@ -50,7 +50,7 @@ export class MenuComponent implements OnInit, OnDestroy{
 
   generarMenu(){
 
-    for(let i = 0; i < 10; i++){
+    // for(let i = 0; i < 10; i++){
 
     MeteorObservable.call('generarMenuSemana').subscribe(
       (result: Menu) => {
@@ -61,7 +61,7 @@ export class MenuComponent implements OnInit, OnDestroy{
         console.log(err);
       }
     );
-  }
+  // }
   }
 
 
