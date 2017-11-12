@@ -155,3 +155,43 @@ agm-map {
 		padding:5px;
 	
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    display: block !important;
+    left: 0;
+    top: 0;
+  }
+
+}
+
+#section-to-print {
+  display: none;
+  table td {
+    border: solid 1px black;
+  }
+
+  table td.momento {
+    background-color: #D0F5A9;
+    text-align: center;
+  }
+
+  table td.almuerzo {
+    background-color: #F5F6CE;
+  }
+
+  table td.cena {
+    background-color: #ECCEF5;
+  }
+
+  table td.dia {
+    background-color: #F2F2F2;
+  }
+}

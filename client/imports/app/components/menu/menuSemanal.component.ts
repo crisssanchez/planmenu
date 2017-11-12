@@ -56,6 +56,10 @@ export class MenuSemanalComponent implements OnInit, OnDestroy {
 
   }
 
+  imprimir() {
+    window.print();
+  }
+
   getPlatosAlmuerzo(dia: number) {
     return this.dieta[dia].almuerzo;
   }

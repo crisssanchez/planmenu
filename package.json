@@ -35,11 +35,13 @@
     "babel-runtime": "^6.18.0",
     "bcrypt": "^1.0.2",
     "bootstrap": "^3.3.7",
+    "cron-parser": "^2.4.3",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.0",
     "meteor-rxjs": "0.4.7",
     "moment": "^2.19.1",
     "ngx-bootstrap": "^1.7.1",
+    "node-schedule": "^1.2.5",
     "reflect-metadata": "0.1.9",
     "rxjs": "5.0.2",
     "zone.js": "0.7.4"

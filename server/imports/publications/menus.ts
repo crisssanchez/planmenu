@@ -12,6 +12,7 @@ import { Alimento } from '../../../both/models/alimento.model';
 import { Producto } from '../../../both/models/producto.model';
 import { Productos } from '../../../both/collections/productos.collection';
 import * as moment from 'moment';
+import { AvisosManager } from '../AvisosManager';
 
 
 Meteor.publish('menus', () => Menus.find());
@@ -203,6 +204,9 @@ Meteor.methods({
 
     console.log("Tiempo total algortimo: " + (now - tiempoInicial));
     console.log("Nºplatos no encontrados: " + contadorUndefined + "/28");
+
+    AvisosManager.getInstance().enviarMenuSemanal(familia, menu);
+    AvisosManager.getInstance().enviarMenuDiario(familia, menu);
 
     return menu;
 

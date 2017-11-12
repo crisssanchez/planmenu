@@ -15,7 +15,8 @@
       <ul class="nav nav-bar nav ">
         <li>
           <a hidden-xs
-            title="Generar PDF"
+            title="Imprimir"
+            (click)="imprimir()"
             class="cabecera icon icon-three icon-1x hidden-xs icon-pdf"
             style="float: right;">
             <i class="fa fa-print fa-2x"></i>
@@ -36,7 +37,8 @@
   </div>
 </div>
 
-<div class="menu" *ngIf="menu != undefined">
+<div class="menu"
+  *ngIf="menu != undefined">
   <div class="row">
     <div *ngFor="let d of dieta">
       <div class="text-center col-md-1">
@@ -58,7 +60,8 @@
         <div *ngFor="let p of getPlatosAlmuerzo(dia)"
           class="row">
 
-          <plato-card [plato]="p" [menu]="menu"></plato-card>
+          <plato-card [plato]="p"
+            [menu]="menu"></plato-card>
 
         </div>
       </div>
@@ -75,10 +78,50 @@
         <div *ngFor="let p of getPlatosCena(dia)"
           class="row">
 
-          <plato-card [plato]="p" [menu]="menu"></plato-card>
+          <plato-card [plato]="p"
+            [menu]="menu"></plato-card>
 
         </div>
       </div>
     </div>
   </div>
+</div>
+
+
+<div id="section-to-print">
+  <table class="menuprint">
+    <tr>
+      <td *ngFor="let d of dieta"
+        class="dia">{{setFormatoFecha(d.fecha)}}</td>
+    </tr>
+
+    <tr>
+      <td colspan="7" class="momento">Almuerzo</td>
+    </tr>
+
+    <tr>
+      <td *ngFor="let d of dieta"
+        class="almuerzo">{{ d.almuerzo[0].nombre }}</td>
+    </tr>
+
+    <tr>
+      <td *ngFor="let d of dieta"
+        class="almuerzo">{{ d.almuerzo[1].nombre }}</td>
+    </tr>
+
+    <tr>
+      <td colspan="7" class="momento">Cena</td>
+    </tr>
+
+    <tr>
+      <td *ngFor="let d of dieta"
+        class="cena">{{ d.cena[0].nombre }}</td>
+    </tr>
+    <tr>
+      <td *ngFor="let d of dieta"
+        class="cena">{{ d.cena[1].nombre }}</td>
+    </tr>
+
+  </table>
+
 </div>
